@@ -199,7 +199,8 @@ class _LoginPageState extends State<LoginPage> {
           } else if (res.userType == 'user') {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
+              MaterialPageRoute(
+                  builder: (context) => HomePage(uid: res.result[0].uid)),
               (Route<dynamic> route) => false,
             );
           }
