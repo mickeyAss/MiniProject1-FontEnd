@@ -1,4 +1,8 @@
+import 'dart:developer';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:project/config/config.dart';
+import 'package:project/models/respone/user_get_uid_res.dart';
 
 class MyLottoPage extends StatefulWidget {
   int uid = 0;
@@ -9,6 +13,8 @@ class MyLottoPage extends StatefulWidget {
 }
 
 class _MyLottoPageState extends State<MyLottoPage> {
+  String url = "";
+  late UserlGetUidRespone user;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -287,5 +293,15 @@ class _MyLottoPageState extends State<MyLottoPage> {
         ],
       ),
     );
+  }
+
+  Future<void> loadDataAsync() async {
+    await Future.delayed(const Duration(seconds: 1), () => print("AAA"));
+    var config = await Configuration.getConfig();
+    url = config['apiEndpoint'];
+
+    var value = await http.get(Uri.parse(("$url/check-uidfk/${widget.uid}")));
+    user = userlGetUidResponeFromJson(value.body);
+    //log(user.lottoid.toString());
   }
 }
