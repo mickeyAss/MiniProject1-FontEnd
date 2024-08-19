@@ -87,8 +87,7 @@ class _AdminRandomPagesState extends State<AdminRandomPages> {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Row(
                                     children: [
-                                      Text(
-                                          'ทำการหมุนลอตโต้เพื่อขายใน\nงวดประจำวันที่ 16 ตุลาคม 2567',
+                                      Text('ทำการหมุนลอตโต้เพื่อออกขาย',
                                           style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.bold,
@@ -99,7 +98,7 @@ class _AdminRandomPagesState extends State<AdminRandomPages> {
                                   ),
                                 ),
                                 Image.asset(
-                                  'assets/images/fortune-wheel.png',
+                                  'assets/images/fortune-wheel (1).png',
                                   width: 170,
                                 ),
                                 SizedBox(
@@ -150,38 +149,15 @@ class _AdminRandomPagesState extends State<AdminRandomPages> {
                                       left: 10, top: 10, right: 10),
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                          'ชุดเลขลอตโต้ที่จะออกจำหน่าย\nงวดประจำวันที่ 16 ตุลาคม 2567',
+                                      Text('ชุดเลขลอตโต้ที่จะออกจำหน่าย',
                                           style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.bold,
                                             color:
                                                 Color.fromARGB(255, 0, 10, 103),
                                           )),
-                                      FilledButton(
-                                        style: FilledButton.styleFrom(
-                                            backgroundColor: Color.fromARGB(255,
-                                                199, 0, 0), // สีพื้นหลังของปุ่ม
-                                            foregroundColor:
-                                                Colors.white, // สีข้อความบนปุ่ม
-                                            padding: EdgeInsets.only(
-                                                left: 10,
-                                                right: 10,
-                                                top: 10,
-                                                bottom: 10),
-                                            textStyle: TextStyle(
-                                                fontSize: 16), // ขนาดข้อความ
-                                            elevation: 15),
-                                        onPressed: delete,
-                                        child: Text(
-                                          'ลบเลขลอตโต้',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 10),
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 ),
@@ -204,7 +180,9 @@ class _AdminRandomPagesState extends State<AdminRandomPages> {
                                       } else {
                                         return Padding(
                                           padding: const EdgeInsets.only(
-                                              left: 8.0, right: 8.0),
+                                              left: 8.0,
+                                              right: 8.0,
+                                              bottom: 8.0),
                                           child: GridView.builder(
                                             gridDelegate:
                                                 SliverGridDelegateWithFixedCrossAxisCount(
@@ -247,6 +225,7 @@ class _AdminRandomPagesState extends State<AdminRandomPages> {
                             ),
                           ),
                         ),
+                        SizedBox(height: 20),
                       ],
                     ),
                   ),
@@ -257,74 +236,6 @@ class _AdminRandomPagesState extends State<AdminRandomPages> {
         ],
       ),
     );
-  }
-
-  void delete() async {
-    // แสดงการยืนยันก่อนลบ
-    bool confirmDelete = await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('ยืนยันการลบ'),
-        content: Text('คุณต้องการลบข้อมูลนี้หรือไม่?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(false); // ยกเลิกการลบ
-            },
-            child: Text('ยกเลิก'),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.of(context).pop(true); // ยืนยันการลบ
-            },
-            child: Text('ยืนยัน'),
-          ),
-        ],
-      ),
-    );
-
-    // ถ้าผู้ใช้ยืนยันการลบ
-    if (confirmDelete == true) {
-      var config = await Configuration.getConfig();
-      var url = config['apiEndpoint'];
-
-      var res = await http.delete(Uri.parse('$url/number_lotto/deletenumber'));
-      if (res.statusCode == 200) {
-        setState(() {
-          randomNumbers.clear(); // ลบข้อมูลจากหน้าแสดงผล
-        });
-
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('สำเร็จ'),
-            content: Text('ลบข้อมูลสำเร็จ'),
-            actions: [
-              FilledButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('ปิด'))
-            ],
-          ),
-        );
-      } else {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('ผิดพลาด'),
-            content: Text('ลบข้อมูลไม่สำเร็จ'),
-            actions: [
-              FilledButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('ปิด'))
-            ],
-          ),
-        );
-      }
-    }
   }
 
   void randomnumber() async {
@@ -417,7 +328,7 @@ class _AdminRandomPagesState extends State<AdminRandomPages> {
     var config = await Configuration.getConfig();
     var url = config['apiEndpoint'];
 
-    var response = await http.get(Uri.parse('$url/number_lotto/getnumber'));
+    var response = await http.get(Uri.parse('$url/number_lotto/getallnumber'));
 
     // Log ค่า response.body ออกมา
     print('Response body: ${response.body}');

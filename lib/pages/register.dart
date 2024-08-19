@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/pages/home.dart';
 import 'package:project/pages/login.dart';
+import 'package:project/config/config.dart';
 import 'package:project/models/requst/user_register_post_req.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -233,7 +234,7 @@ class _RegisterPage extends State<RegisterPage> {
         );
         return;
       } else {
-        setState(() {
+        setState(() async {
           var model = UserRegisterPostReq(
             name: nameCt1.text,
             phone: phoneNoCtl.text,
@@ -242,10 +243,10 @@ class _RegisterPage extends State<RegisterPage> {
             wallet: walletCt1.text,
             surname: surnameCt1.text,
           );
+          var config = await Configuration.getConfig();
+          var url = config['apiEndpoint'];
           http
-              .post(
-                  Uri.parse(
-                      "https://miniproject1-backend-website.onrender.com/user/register"),
+              .post(Uri.parse("$url/user/register"),
                   headers: {"Content-Type": "application/json; charset=utf-8"},
                   body: userRegisterPostReqToJson(model))
               .then(
@@ -271,7 +272,7 @@ class _RegisterPage extends State<RegisterPage> {
 
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
+                  MaterialPageRoute(builder: (context) => LoginPage()),
                   (Route<dynamic> route) => false,
                 );
               });

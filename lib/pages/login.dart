@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/pages/home.dart';
 import 'package:project/pages/admin.dart';
+import 'package:project/config/config.dart';
 import 'package:project/pages/register.dart';
 import 'package:project/pages/admin_random.dart';
+import 'package:project/models/respone/user_login_respone.dart';
 import 'package:project/models/requst/user_login_post_req.dart';
 // import 'dart:math';
 
@@ -173,28 +175,28 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     try {
+      var config = await Configuration.getConfig();
+      var url = config['apiEndpoint'];
       final response = await http.post(
-        Uri.parse(
-            "https://miniproject1-backend-website.onrender.com/user/login"),
+        Uri.parse("$url/user/login"),
         headers: {"Content-Type": "application/json; charset=utf-8"},
         body: jsonEncode(
             model.toJson()), // ตรวจสอบว่ามีฟังก์ชัน toJson() ในโมเดลหรือไม่
       );
+      var res = userloginPostResponeFromJson(response.body);
+      log(res.result[0].uid.toString());
 
       if (response.statusCode == 200) {
-        final responseData =
-            jsonDecode(response.body); // แปลงข้อมูลตอบกลับเป็น JSON
-
         // ตรวจสอบข้อความที่ส่งกลับมา
-        if (responseData['message'] == 'Login successfully') {
-          if (responseData['userType'] == 'admin') {
+        if (res.message == 'Login successfully') {
+          if (res.userType == 'admin') {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AdminPages(),
+                builder: (context) => AdminPages(uid: res.result[0].uid),
               ),
             );
-          } else if (responseData['userType'] == 'user') {
+          } else if (res.userType == 'user') {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const HomePage()),
