@@ -280,7 +280,9 @@ class _HomePageState extends State<HomePage> {
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  const BuyPage(),
+                                                                  BuyPage(
+                                                                      uid: widget
+                                                                          .uid),
                                                             ));
                                                       },
                                                       style: FilledButton
