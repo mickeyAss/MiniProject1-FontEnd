@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:project/pages/buy.dart';
 import 'package:project/pages/login.dart';
 import 'package:project/pages/wallet.dart';
 import 'package:project/pages/mylotto.dart';
@@ -8,10 +9,6 @@ import 'package:project/config/config.dart';
 import 'package:project/pages/profile.dart';
 import 'package:project/models/respone/number_get_res.dart';
 import 'package:project/models/respone/user_get_uid_res.dart';
-
-
-
-
 
 class HomePage extends StatefulWidget {
   int uid = 0;
@@ -279,12 +276,12 @@ class _HomePageState extends State<HomePage> {
                                                           0, 25, 0, 0),
                                                   child: FilledButton(
                                                       onPressed: () {
-                                                        // Navigator.push(
-                                                        //     context,
-                                                        //     MaterialPageRoute(
-                                                        //       builder: (context) =>
-                                                        //           const BuyPage(),
-                                                        //     ));
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const BuyPage(),
+                                                            ));
                                                       },
                                                       style: FilledButton
                                                           .styleFrom(
@@ -540,7 +537,8 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>  MyLottoPage(uid: widget.uid),
+                                  builder: (context) =>
+                                      MyLottoPage(uid: widget.uid),
                                 ));
                           },
                           icon: const Icon(
@@ -626,8 +624,6 @@ class _HomePageState extends State<HomePage> {
     var value = await http.get(Uri.parse(("$url/get/${widget.uid}")));
     user = userlGetUidResponeFromJson(value.body);
     log(widget.uid.toString());
-
-    
   }
 
   Future<void> loaddatanumber() async {
