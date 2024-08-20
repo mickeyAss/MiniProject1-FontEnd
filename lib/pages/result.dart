@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:project/pages/home.dart';
 import 'package:project/config/config.dart';
 import 'package:project/models/respone/user_my_reslt_res.dart';
 
@@ -18,6 +19,7 @@ class ResultPage extends StatefulWidget {
 class _ResultPageState extends State<ResultPage> {
   late Future<void> loadData;
   late UserMyresultRespone userMyresultRespone;
+  bool isChecked = false;
 
   @override
   void initState() {
@@ -211,7 +213,144 @@ class _ResultPageState extends State<ResultPage> {
                             ),
                           ),
                         ),
-                        FilledButton(onPressed: update, child: Text('ขึ้นเงิน'))
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: SizedBox(
+                            width: 350,
+                            height: 300,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 255, 211, 34),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black.withOpacity(0.3),
+                                        spreadRadius: 1,
+                                        blurRadius: 1,
+                                        offset: Offset(0, 1))
+                                  ]),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .start, // จัดวางให้ชิดซ้าย
+                                  children: [
+                                    Text(
+                                      'ช่องทางการชำระเงิน',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                        height:
+                                            10.0), // เพิ่มระยะห่างระหว่างข้อความและกรอบ
+                                    Container(
+                                      padding: EdgeInsets.all(
+                                          10.0), // ระยะห่างภายในกรอบให้เท่ากันทุกด้าน
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: const Color.fromARGB(255, 255,
+                                              255, 255), // สีของเส้นกรอบ
+                                          width: 1.0, // ความหนาของเส้นกรอบ
+                                        ),
+                                        borderRadius: BorderRadius.circular(
+                                            20.0), // มุมโค้งของกรอบ
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Checkbox(
+                                                value:
+                                                    isChecked, // ค่าของ Checkbox จะเก็บอยู่ในตัวแปรนี้
+                                                onChanged: (bool? newValue) {
+                                                  setState(() {
+                                                    isChecked = newValue!;
+                                                  });
+                                                },
+                                                activeColor: Colors
+                                                    .white, // สีของ Checkbox เมื่อถูกติ๊ก
+                                                checkColor: Colors
+                                                    .black, // สีของเครื่องหมายถูก
+                                              ),
+                                              Image.asset(
+                                                'assets/images/wallet.png',
+                                                width: 50,
+                                              ),
+                                              SizedBox(width: 5.0),
+                                              Text(
+                                                'บัญชี wallet ของคุณ',
+                                                style: TextStyle(fontSize: 15),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(40.0),
+                                        child: Column(
+                                          children: [
+                                            FilledButton(
+                                              style: FilledButton.styleFrom(
+                                                backgroundColor: Color.fromARGB(
+                                                    255,
+                                                    0,
+                                                    10,
+                                                    103), // สีพื้นหลังของปุ่ม
+                                                foregroundColor: Colors
+                                                    .white, // สีข้อความบนปุ่ม
+                                                padding: EdgeInsets.only(
+                                                    left: 50, right: 50),
+                                                textStyle: TextStyle(
+                                                    fontSize:
+                                                        16), // ขนาดข้อความ
+                                                elevation: 15,
+                                              ),
+                                              onPressed: () {
+                                                if (!isChecked) {
+                                                  // แสดง Snackbar เตือนหาก Checkbox ไม่ถูกติ๊ก
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                          'กรุณาเลือกช่องทางการชำระเงิน'),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  // ถ้า Checkbox ถูกติ๊กแล้ว ให้เรียกฟังก์ชัน update
+                                                  update();
+                                                }
+                                              },
+                                              child: Text(
+                                                'ขึ้นเงิน',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            Text(
+                                              '*กดขึ้นเงินเพื่อรับเงินรางวัล',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: const Color.fromARGB(
+                                                    255, 67, 67, 67),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     );
                   },
@@ -227,27 +366,39 @@ class _ResultPageState extends State<ResultPage> {
   void update() async {
     var config = await Configuration.getConfig();
     var url = config['apiEndpoint'];
+    var res = await http.post(
+        Uri.parse('$url/user/update-wallet/${widget.uid}'),
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: jsonEncode({
+          "prizeAmount": userMyresultRespone.prizeAmount
+        })); // ส่งเป็น JSON object
+    var v = jsonDecode(res.body);
+    log(v['message']); // แก้ไขจาก 'messsage' เป็น 'message'
 
     try {
-      var ress = await http.post(
-          Uri.parse('$url/user/update-wallet/${widget.uid}'),
-          headers: {"Content-Type": "application/json; charset=utf-8"},
-          body: jsonEncode(userMyresultRespone.prizeAmount));
-
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('สำเร็จ'),
-          content: const Text('ขึ้นเงินเรียบร้อย'),
-          actions: [
-            FilledButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('ปิด'))
-          ],
-        ),
-      );
+      if (v['message'] == 'Wallet updated successfully') {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('สำเร็จ'),
+            content: const Text('ขึ้นเงินเรียบร้อย'),
+            actions: [
+              FilledButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(uid: widget.uid),
+                      ),
+                    );
+                  },
+                  child: const Text('ปิด'))
+            ],
+          ),
+        );
+      } else {
+        log('ไม่สามารถขึ้นเงินได้');
+      }
     } catch (err) {
       showDialog(
         context: context,

@@ -673,13 +673,41 @@ class _HomePageState extends State<HomePage> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('ผลการค้นหา'),
-                  content: Text('ถูกรางวัลที่1'),
+                  content: Text('ถูกรางวัลที่ 1'),
                   actions: [
-                    TextButton(
-                      child: Text('ตกลง'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+                    Row(
+                      children: [
+                        FilledButton(
+                          style: FilledButton.styleFrom(
+                              backgroundColor: Color.fromARGB(
+                                  255, 0, 10, 103), // สีพื้นหลังของปุ่ม
+                              foregroundColor: Colors.white, // สีข้อความบนปุ่ม
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              textStyle: TextStyle(fontSize: 16), // ขนาดข้อความ
+                              elevation: 15),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResultPage(
+                                    uid: widget.uid,
+                                    lottoid: v.result[0].lottoid),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'ขึ้นเงินรางวัล',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        TextButton(
+                          child: Text('ตกลง'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 );
@@ -739,13 +767,41 @@ class _HomePageState extends State<HomePage> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('ผลการค้นหา'),
-                  content: Text('ถูกรางวัลที่3'),
+                  content: Text('ถูกรางวัลที่ 3'),
                   actions: [
-                    TextButton(
-                      child: Text('ตกลง'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+                    Row(
+                      children: [
+                        FilledButton(
+                          style: FilledButton.styleFrom(
+                              backgroundColor: Color.fromARGB(
+                                  255, 0, 10, 103), // สีพื้นหลังของปุ่ม
+                              foregroundColor: Colors.white, // สีข้อความบนปุ่ม
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              textStyle: TextStyle(fontSize: 16), // ขนาดข้อความ
+                              elevation: 15),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResultPage(
+                                    uid: widget.uid,
+                                    lottoid: v.result[0].lottoid),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'ขึ้นเงินรางวัล',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        TextButton(
+                          child: Text('ตกลง'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 );
@@ -758,13 +814,41 @@ class _HomePageState extends State<HomePage> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('ผลการค้นหา'),
-                  content: Text('ถูกรางวัลที่4'),
+                  content: Text('ถูกรางวัลที่ 4'),
                   actions: [
-                    TextButton(
-                      child: Text('ตกลง'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+                    Row(
+                      children: [
+                        FilledButton(
+                          style: FilledButton.styleFrom(
+                              backgroundColor: Color.fromARGB(
+                                  255, 0, 10, 103), // สีพื้นหลังของปุ่ม
+                              foregroundColor: Colors.white, // สีข้อความบนปุ่ม
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              textStyle: TextStyle(fontSize: 16), // ขนาดข้อความ
+                              elevation: 15),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResultPage(
+                                    uid: widget.uid,
+                                    lottoid: v.result[0].lottoid),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'ขึ้นเงินรางวัล',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        TextButton(
+                          child: Text('ตกลง'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 );
@@ -777,13 +861,41 @@ class _HomePageState extends State<HomePage> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('ผลการค้นหา'),
-                  content: Text('ถูกรางวัลที่5'),
+                  content: Text('ถูกรางวัลที่ 5'),
                   actions: [
-                    TextButton(
-                      child: Text('ตกลง'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+                    Row(
+                      children: [
+                        FilledButton(
+                          style: FilledButton.styleFrom(
+                              backgroundColor: Color.fromARGB(
+                                  255, 0, 10, 103), // สีพื้นหลังของปุ่ม
+                              foregroundColor: Colors.white, // สีข้อความบนปุ่ม
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              textStyle: TextStyle(fontSize: 16), // ขนาดข้อความ
+                              elevation: 15),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResultPage(
+                                    uid: widget.uid,
+                                    lottoid: v.result[0].lottoid),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'ขึ้นเงินรางวัล',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        TextButton(
+                          child: Text('ตกลง'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 );
@@ -831,6 +943,23 @@ class _HomePageState extends State<HomePage> {
         }
       }
     } catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('คุณไม่ได้ซื้อลอตโต้นี้'),
+            content: Text('โปรดเช็คลอตโต้ของคุณ'),
+            actions: [
+              TextButton(
+                child: Text('ตกลง'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
       log('Error occurred: $e');
     }
   }
