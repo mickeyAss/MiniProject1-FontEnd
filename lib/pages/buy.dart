@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,9 @@ class _BuyPageState extends State<BuyPage> {
       List.generate(6, (_) => TextEditingController());
   List<FocusNode> focusNodes = List.generate(6, (_) => FocusNode());
   String searchStatus = ''; // ใช้สำหรับเก็บข้อความสถานะของการค้นหา
+
+  final GlobalKey<State<StatefulWidget>> _sizedBoxKey = GlobalKey();
+  OverlayEntry? _overlayEntry;
 
   @override
   void initState() {
@@ -80,7 +84,7 @@ class _BuyPageState extends State<BuyPage> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 child: SizedBox(
-                                  width: 40,
+                                  width: 50,
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -94,7 +98,6 @@ class _BuyPageState extends State<BuyPage> {
                                       maxLength: 1,
                                       decoration: InputDecoration(
                                         counterText: '',
-                                        hintText: '${index + 1}',
                                         hintStyle:
                                             TextStyle(color: Colors.black54),
                                         border: InputBorder.none,
@@ -200,17 +203,22 @@ class _BuyPageState extends State<BuyPage> {
                                       height: 160,
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(20)),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.3),
-                                                  spreadRadius: 1,
-                                                  blurRadius: 1,
-                                                  offset: Offset(0, 1))
-                                            ]),
+                                          color: e.uidFk == null
+                                              ? Colors.white
+                                              : Colors
+                                                  .grey, // เปลี่ยนสีพื้นหลัง
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.3),
+                                              spreadRadius: 1,
+                                              blurRadius: 1,
+                                              offset: Offset(0, 1),
+                                            ),
+                                          ],
+                                        ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(20.0),
                                           child: Row(
@@ -242,48 +250,42 @@ class _BuyPageState extends State<BuyPage> {
                                                     width: 50,
                                                     height: 50,
                                                     child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    0,
-                                                                    10,
-                                                                    103),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            20)),
-                                                            boxShadow: [
-                                                              BoxShadow(
-                                                                  color: Colors
-                                                                      .black
-                                                                      .withOpacity(
-                                                                          0.3),
-                                                                  spreadRadius:
-                                                                      1,
-                                                                  blurRadius: 1,
-                                                                  offset:
-                                                                      Offset(
-                                                                          0, 1))
-                                                            ]),
-                                                        child: Image.asset(
-                                                            'assets/images/logo.png')),
+                                                      decoration: BoxDecoration(
+                                                        color: Color.fromARGB(
+                                                            255, 0, 10, 103),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    20)),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.3),
+                                                            spreadRadius: 1,
+                                                            blurRadius: 1,
+                                                            offset:
+                                                                Offset(0, 1),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: Image.asset(
+                                                          'assets/images/logo.png'),
+                                                    ),
                                                   ),
                                                   Text(
                                                     '${e.price} บาท',
                                                     style: TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 0, 10, 103),
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18),
+                                                      color: Color.fromARGB(
+                                                          255, 0, 10, 103),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                              SizedBox(
-                                                width: 20,
-                                              ),
+                                              SizedBox(width: 20),
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 6),
@@ -292,59 +294,101 @@ class _BuyPageState extends State<BuyPage> {
                                                     Text(
                                                       'LOTTO CLICK',
                                                       style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 20),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20,
+                                                      ),
                                                     ),
                                                     SizedBox(
                                                       width: 190,
                                                       height: 50,
                                                       child: Container(
-                                                          decoration: BoxDecoration(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      0,
-                                                                      10,
-                                                                      103),
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Color.fromARGB(
+                                                              255, 0, 10, 103),
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
                                                                       .circular(
                                                                           20)),
-                                                              boxShadow: [
-                                                                BoxShadow(
-                                                                    color: Colors
-                                                                        .black
-                                                                        .withOpacity(
-                                                                            0.3),
-                                                                    spreadRadius:
-                                                                        1,
-                                                                    blurRadius:
-                                                                        1,
-                                                                    offset:
-                                                                        Offset(
-                                                                            0,
-                                                                            1))
-                                                              ]),
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                e.number,
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        30,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              )
-                                                            ],
-                                                          )),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.3),
+                                                              spreadRadius: 1,
+                                                              blurRadius: 1,
+                                                              offset:
+                                                                  Offset(0, 1),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              e.number,
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 30,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ),
+                                                    if (e.uidFk ==
+                                                        null) // ซ่อนปุ่มเลือกถ้าขายแล้ว
+                                                      Expanded(
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  top: 15),
+                                                          child: FilledButton(
+                                                            style: FilledButton
+                                                                .styleFrom(
+                                                              backgroundColor:
+                                                                  Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          232,
+                                                                          56),
+                                                              foregroundColor:
+                                                                  const Color
+                                                                      .fromARGB(
+                                                                      255,
+                                                                      0,
+                                                                      0,
+                                                                      0),
+                                                              textStyle:
+                                                                  TextStyle(
+                                                                      fontSize:
+                                                                          14),
+                                                            ),
+                                                            onPressed: () {
+                                                              showPurchaseDialog(
+                                                                  e); // เรียกใช้ dialog เมื่อกดปุ่มซื้อ
+                                                            },
+                                                            child: Text(
+                                                              'ซื้อ',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
                                                   ],
                                                 ),
                                               ),
@@ -367,6 +411,98 @@ class _BuyPageState extends State<BuyPage> {
         ],
       ),
     );
+  }
+
+  void showPurchaseDialog(NumberGetRespone number) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('ยืนยันการซื้อ'),
+          content: Text(
+              'คุณต้องการซื้อเลข ${number.number} ในราคา ${number.price} บาทหรือไม่?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('ยกเลิก'),
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิด popup เมื่อกดยกเลิก
+              },
+            ),
+            TextButton(
+              child: Text('ยืนยัน'),
+              onPressed: () {
+                // ส่งค่า lottoid และ uid ไปที่ API เมื่อยืนยันการซื้อ
+                buylotto(number.lottoid, widget.uid);
+                Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void buylotto(int lottoid, int uid) async {
+    try {
+      var config = await Configuration.getConfig();
+      var url = config['apiEndpoint'];
+
+      var response = await http.put(
+        Uri.parse('$url/number_lotto/update-uid-fk'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, int>{
+          'lottoid': lottoid,
+          'uid_fk': uid,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        log('Purchase success: ${response.body}');
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('ซื้อสำเร็จ'),
+              content: Text('ขอบคุณ'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('ตกลง'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        await getData();
+        setState(() {});
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('ยอดเงินไม่เพียงพอ'),
+              content: Text('กรุณาเติมเงิน '),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('ตกลง'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        log('Failed to purchase: ${response.statusCode}');
+      }
+    } catch (e) {
+      log('Error occurred: $e');
+    }
   }
 
   Future<void> getData() async {

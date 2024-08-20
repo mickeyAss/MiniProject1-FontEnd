@@ -587,11 +587,6 @@ class _AdminPagesState extends State<AdminPages> {
 
     log(res.body);
     getnumber = numberGetResponeFromJson(res.body);
-
-    // Log the 'result' field for each item in getnumber
-    for (var number in getnumber) {
-      log(number.result.toString());
-    }
   }
 
   Future<void> routelotto() async {

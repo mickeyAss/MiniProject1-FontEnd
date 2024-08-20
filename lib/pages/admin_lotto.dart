@@ -197,17 +197,22 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                                       height: 160,
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(20)),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.3),
-                                                  spreadRadius: 1,
-                                                  blurRadius: 1,
-                                                  offset: Offset(0, 1))
-                                            ]),
+                                          color: e.uidFk == null
+                                              ? Colors.white
+                                              : Colors
+                                                  .grey, // เปลี่ยนสีพื้นหลัง
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.3),
+                                              spreadRadius: 1,
+                                              blurRadius: 1,
+                                              offset: Offset(0, 1),
+                                            ),
+                                          ],
+                                        ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(20.0),
                                           child: Row(

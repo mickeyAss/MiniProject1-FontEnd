@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:developer';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:project/config/config.dart';
+import 'package:project/models/respone/number_get_res.dart';
 import 'package:project/models/respone/user_get_uid_res.dart';
+import 'package:project/models/respone/user_my_lotto_res.dart';
 
 class MyLottoPage extends StatefulWidget {
   int uid = 0;
@@ -13,295 +16,353 @@ class MyLottoPage extends StatefulWidget {
 }
 
 class _MyLottoPageState extends State<MyLottoPage> {
-  String url = "";
-  late UserlGetUidRespone user;
+  late Future<void> loadData;
+  List<UserMyLottoRespone> getnumber = [];
+  List<TextEditingController> searchControllers =
+      List.generate(6, (_) => TextEditingController());
+  List<FocusNode> focusNodes = List.generate(6, (_) => FocusNode());
+  String searchStatus = ''; // ใช้สำหรับเก็บข้อความสถานะของการค้นหา
+
+  final GlobalKey<State<StatefulWidget>> _sizedBoxKey = GlobalKey();
+  OverlayEntry? _overlayEntry;
+
+  @override
+  void initState() {
+    super.initState();
+    loadData = getData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
-          Stack(
-            children: [
-              Image.asset(
-                "assets/images/bg1.jpg",
-                width: double.infinity,
-                height: 250,
-                fit: BoxFit.cover,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
-                child: Column(
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "LOTTO CLICK",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text(
-                        "กรอกเลขลอตโต้ของคุณ",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(6, (index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: SizedBox(
-                              width: 45,
-                              height: 45, // เพิ่มความสูงของช่องข้อความ
-                              child: TextField(
-                                keyboardType: TextInputType.number,
-                                maxLength: 1,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    fontSize: 22, color: Colors.black),
-                                decoration: InputDecoration(
-                                  counterText: "",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                        color: Colors.white, width: 2),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 6), // ปรับช่องว่างภายใน
-                                ),
-                                onChanged: (value) {
-                                  if (value.length == 1 && index < 5) {
-                                    FocusScope.of(context)
-                                        .nextFocus(); //ถ้าสถานะข้างต้นเป็นจริง, โฟกัสจะย้ายไปที่ช่องถัดไปโดยอัตโนมัติ
-                                  }
-                                },
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          FilledButton(
-                            onPressed: () {},
-                            style: FilledButton.styleFrom(
-                              backgroundColor: Colors.white,
-                            ),
-                            child: const Text(
-                              'ตรวจผล',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: Color.fromARGB(255, 26, 38, 108),
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          FilledButton(
-                            onPressed: () {},
-                            style: FilledButton.styleFrom(
-                              backgroundColor: Colors.amber,
-                              padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                            ),
-                            child: const Text(
-                              'ค้นหาเลขเด็ด',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          Container(
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 0, 10, 103),
+            ),
           ),
-          Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "เลขลอตโต้ของคุณ",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 26, 38, 108),
-                      ),
-                    ),
-                  ],
+          const Padding(
+            padding: EdgeInsets.only(left: 14, right: 14, top: 35),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Lotto click',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 25,
+                  ),
                 ),
-              ),
-              Card(
-                child: SizedBox(
-                  width: 350,
-                  height: 180,
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 80),
+            child: Column(
+              children: [
+                const Text(
+                  'กรอกเลขลอตเตอร์รี่ที่ต้องการค้นหา',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Expanded(
                   child: Column(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(100, 10, 0, 5),
-                        child: Text(
-                          "LOTTO CLICK",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: List.generate(6, (index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: SizedBox(
+                                  width: 50,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: TextField(
+                                      controller: searchControllers[index],
+                                      focusNode: focusNodes[index],
+                                      keyboardType: TextInputType.number,
+                                      textAlign: TextAlign.center,
+                                      maxLength: 1,
+                                      decoration: const InputDecoration(
+                                        counterText: '',
+                                        hintStyle:
+                                            TextStyle(color: Colors.black54),
+                                        border: InputBorder.none,
+                                      ),
+                                      onChanged: (value) {
+                                        if (value.length == 0) {
+                                          // If the value is empty, move focus to the previous field
+                                          if (index > 0) {
+                                            FocusScope.of(context).requestFocus(
+                                                focusNodes[index - 1]);
+                                          }
+                                        } else if (value.length == 1) {
+                                          // Move focus to the next field if not the last field
+                                          if (index < 5) {
+                                            FocusScope.of(context).requestFocus(
+                                                focusNodes[index + 1]);
+                                          } else {
+                                            // Unfocus on the last field
+                                            FocusScope.of(context).unfocus();
+                                          }
+                                        }
+                                      },
+                                      onTap: () {
+                                        if (index > 0 &&
+                                            searchControllers[index - 1]
+                                                .text
+                                                .isEmpty) {
+                                          // Prevent focus on current field if previous fields are empty
+                                          FocusScope.of(context).requestFocus(
+                                              focusNodes[index - 1]);
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40, right: 40),
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 255, 232, 56),
+                            foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            textStyle: const TextStyle(fontSize: 14),
+                            elevation: 15,
+                          ),
+                          onPressed: () {
+                            String searchQuery = searchControllers
+                                .map((controller) => controller.text)
+                                .join();
+                            searchNumber(searchQuery);
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'ค้นหาลอตเตอร์รี่',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: 5),
+                              Icon(
+                                Icons.search,
+                                color: Colors.black,
+                                size: 24,
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                    15), // กำหนดค่ามุมที่ต้องการ
-                                child: Image.asset(
-                                  "assets/images/logobg.png",
-                                  width: 60,
-                                ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: FutureBuilder(
+                                    future: loadData,
+                                    builder: (context, snapshot) {
+                                      return SingleChildScrollView(
+                                        child: Column(
+                                            children: getnumber
+                                                .map(
+                                                  (e) => Column(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                left: 40,
+                                                                right: 40),
+                                                        child: SizedBox(
+                                                          width: 350,
+                                                          height: 160,
+                                                          child: Container(
+                                                            decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    const BorderRadius
+                                                                        .all(
+                                                                        Radius.circular(
+                                                                            20)),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                      color: Colors
+                                                                          .black
+                                                                          .withOpacity(
+                                                                              0.3),
+                                                                      spreadRadius:
+                                                                          1,
+                                                                      blurRadius:
+                                                                          1,
+                                                                      offset:
+                                                                          const Offset(
+                                                                              0,
+                                                                              1))
+                                                                ]),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(
+                                                                      20.0),
+                                                              child: Row(
+                                                                children: [
+                                                                  Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        width:
+                                                                            50,
+                                                                        height:
+                                                                            50,
+                                                                        child: Container(
+                                                                            decoration: BoxDecoration(color: const Color.fromARGB(255, 0, 10, 103), borderRadius: const BorderRadius.all(Radius.circular(20)), boxShadow: [
+                                                                              BoxShadow(color: Colors.black.withOpacity(0.3), spreadRadius: 1, blurRadius: 1, offset: const Offset(0, 1))
+                                                                            ]),
+                                                                            child: Image.asset('assets/images/logo.png')),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    width: 20,
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                        .only(
+                                                                        top: 6),
+                                                                    child:
+                                                                        Column(
+                                                                      children: [
+                                                                        const Text(
+                                                                          'LOTTO CLICK',
+                                                                          style: TextStyle(
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 20),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              190,
+                                                                          height:
+                                                                              50,
+                                                                          child: Container(
+                                                                              decoration: BoxDecoration(color: const Color.fromARGB(255, 0, 10, 103), borderRadius: const BorderRadius.all(Radius.circular(20)), boxShadow: [
+                                                                                BoxShadow(color: Colors.black.withOpacity(0.3), spreadRadius: 1, blurRadius: 1, offset: const Offset(0, 1))
+                                                                              ]),
+                                                                              child: Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                children: [
+                                                                                  Text(
+                                                                                    e.number,
+                                                                                    style: const TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+                                                                                  )
+                                                                                ],
+                                                                              )),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 20,
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                                .toList()),
+                                      );
+                                    }),
                               ),
                             ],
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: SizedBox(
-                                  width: 200,
-                                  height: 60,
-                                  child: Container(
-                                    color:
-                                        const Color.fromARGB(255, 14, 22, 111),
-                                    child: const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "4 4 1 1 1 1",
-                                          style: TextStyle(
-                                            fontSize: 32,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 35, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "งวดวันที่",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 26, 38, 108),
-                                  ),
-                                ),
-                                Text(
-                                  "1 สิงหาคม 2567",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                  ),
-                                )
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "งวดที่",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 26, 38, 108),
-                                    ),
-                                  ),
-                                  Text(
-                                    "1",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "ชุดที่",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 26, 38, 108),
-                                  ),
-                                ),
-                                Text(
-                                  "1",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              )
-            ],
-          )
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Future<void> loadDataAsync() async {
-    await Future.delayed(const Duration(seconds: 1), () => print("AAA"));
+  Future<void> getData() async {
     var config = await Configuration.getConfig();
-    url = config['apiEndpoint'];
+    var url = config['apiEndpoint'];
 
-    var value = await http.get(Uri.parse(("$url/check-uidfk/${widget.uid}")));
-    user = userlGetUidResponeFromJson(value.body);
-    //log(user.lottoid.toString());
+    var response =
+        await http.get(Uri.parse('$url/user/check-uidfk/${widget.uid}'));
+    log(response.body);
+    getnumber = userMyLottoResponeFromJson(response.body);
+  }
+
+  Future<void> searchNumber(String number) async {
+    try {
+      var config = await Configuration.getConfig();
+      var url = config['apiEndpoint'];
+
+      if (number.isEmpty) {
+        // ถ้าหมายเลขค้นหาว่าง ให้โหลดข้อมูลทั้งหมด
+        await getData();
+        setState(() {
+          searchStatus = ''; // รีเซ็ตข้อความสถานะเมื่อค้นหาว่าง
+        });
+      } else {
+        // ค้นหาตามหมายเลขที่ป้อนและ uid
+        var searchUrl = Uri.parse(
+            '$url/user/searchnumber?number=$number&uid=${widget.uid}');
+        var response = await http.get(searchUrl);
+
+        if (response.statusCode == 200) {
+          log(response.body);
+          List<UserMyLottoRespone> results =
+              userMyLottoResponeFromJson(response.body);
+          setState(() {
+            if (results.isEmpty) {
+              searchStatus = 'ไม่มีเลขนี้';
+            } else {
+              getnumber = results;
+              searchStatus = ''; // รีเซ็ตข้อความสถานะเมื่อพบหมายเลข
+            }
+          });
+        } else {
+          log('Request failed with status: ${response.statusCode}.');
+          setState(() {
+            searchStatus = 'เกิดข้อผิดพลาด'; // แสดงข้อความเมื่อเกิดข้อผิดพลาด
+          });
+        }
+      }
+    } catch (e) {
+      log('Error occurred: $e');
+    }
   }
 }
