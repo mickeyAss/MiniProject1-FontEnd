@@ -41,7 +41,7 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Lotto click',
+                  'LOTTO CLICK',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -77,7 +77,7 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 child: SizedBox(
-                                  width: 40,
+                                  width: 44,
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -91,7 +91,6 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                                       maxLength: 1,
                                       decoration: InputDecoration(
                                         counterText: '',
-                                        hintText: '${index + 1}',
                                         hintStyle:
                                             TextStyle(color: Colors.black54),
                                         border: InputBorder.none,
@@ -137,10 +136,15 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                         padding: const EdgeInsets.only(left: 40, right: 40),
                         child: FilledButton(
                           style: FilledButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 255, 232, 56),
+                            backgroundColor:
+                                const Color.fromARGB(255, 255, 232, 56),
                             foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                            padding: EdgeInsets.symmetric(vertical: 8),
-                            textStyle: TextStyle(fontSize: 14),
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            textStyle: const TextStyle(fontSize: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                            ),
                             elevation: 15,
                           ),
                           onPressed: () {

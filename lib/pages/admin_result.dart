@@ -52,12 +52,13 @@ class _AdminResultPageState extends State<AdminResultPage> {
                   elevation: 0, // ไม่มีเงา
                   iconTheme: IconThemeData(color: Colors.white),
                   title: Text(
-                    'Lotto click',
+                    'ย้อนกลับ',
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
+
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -69,84 +70,102 @@ class _AdminResultPageState extends State<AdminResultPage> {
                             height:
                                 5), // เพิ่มช่องว่างด้านบนเพื่อให้ไม่ทับ AppBar
                         Padding(
-                          padding: const EdgeInsets.only(left: 12, right: 12),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween, // จัดตำแหน่งให้มีช่องว่างระหว่างปุ่ม
+                          padding: const EdgeInsets.only(
+                              left: 12, right: 12, top: 15),
+                          child: Column(
                             children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(255, 207, 207,
-                                        207), // กำหนดสีเทาสำหรับปุ่ม
-                                    borderRadius:
-                                        BorderRadius.circular(20), // ทำให้มุมมน
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 0), // ลดขนาด padding
-                                  child: DropdownButtonHideUnderline(
-                                    // ซ่อนเส้นใต้ของ DropdownButton
-                                    child: DropdownButton<String>(
-                                      value: selectedValue,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          selectedValue = newValue!;
-                                        });
-                                      },
-                                      items: [
-                                        'รางวัลที่ 1',
-                                        'รางวัลที่ 2',
-                                        'รางวัลที่ 3',
-                                        'รางวัลที่ 4',
-                                        'รางวัลที่ 5'
-                                      ].map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                      isExpanded: true,
-                                      style: TextStyle(color: Colors.black),
-                                      dropdownColor: Colors.white,
-                                      icon: Icon(Icons.arrow_drop_down,
-                                          color: Colors.black),
+                              Text(
+                                'ทำการออกรางวัล',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween, // จัดตำแหน่งให้มีช่องว่างระหว่างปุ่ม
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(255, 207,
+                                            207, 207), // กำหนดสีเทาสำหรับปุ่ม
+                                        borderRadius: BorderRadius.circular(
+                                            20), // ทำให้มุมมน
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 0), // ลดขนาด padding
+                                      child: DropdownButtonHideUnderline(
+                                        // ซ่อนเส้นใต้ของ DropdownButton
+                                        child: DropdownButton<String>(
+                                          value: selectedValue,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              selectedValue = newValue!;
+                                            });
+                                          },
+                                          items: [
+                                            'รางวัลที่ 1',
+                                            'รางวัลที่ 2',
+                                            'รางวัลที่ 3',
+                                            'รางวัลที่ 4',
+                                            'รางวัลที่ 5'
+                                          ].map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Text(value),
+                                            );
+                                          }).toList(),
+                                          isExpanded: true,
+                                          style: TextStyle(color: Colors.black),
+                                          dropdownColor: Colors.white,
+                                          icon: Icon(Icons.arrow_drop_down,
+                                              color: Colors.black),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              SizedBox(width: 10), // เพิ่มช่องว่างระหว่างปุ่ม
-                              Expanded(
-                                child: FilledButton(
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor: Color.fromARGB(
-                                        255, 255, 232, 56), // สีพื้นหลังของปุ่ม
-                                    foregroundColor: const Color.fromARGB(
-                                        255, 0, 0, 0), // สีข้อความบนปุ่ม
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 9), // ปรับ padding ให้เหมาะสม
-                                    textStyle:
-                                        TextStyle(fontSize: 16), // ขนาดข้อความ
-                                    elevation: 15,
-                                  ),
-                                  onPressed: result,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.change_circle_outlined,
-                                        color: Colors.black,
-                                        size: 30,
+                                  SizedBox(
+                                      width: 10), // เพิ่มช่องว่างระหว่างปุ่ม
+                                  Expanded(
+                                    child: FilledButton(
+                                      style: FilledButton.styleFrom(
+                                        backgroundColor: Color.fromARGB(255,
+                                            255, 232, 56), // สีพื้นหลังของปุ่ม
+                                        foregroundColor: const Color.fromARGB(
+                                            255, 0, 0, 0), // สีข้อความบนปุ่ม
+                                        padding: EdgeInsets.symmetric(
+                                            vertical:
+                                                9), // ปรับ padding ให้เหมาะสม
+                                        textStyle: TextStyle(
+                                            fontSize: 16), // ขนาดข้อความ
+                                        elevation: 15,
                                       ),
-                                      Text(
-                                        'ทำการออกรางวัล',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                      onPressed: result,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.change_circle_outlined,
+                                            color: Colors.black,
+                                            size: 30,
+                                          ),
+                                          Text(
+                                            'ทำการออกรางวัล',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
@@ -353,21 +372,32 @@ class _AdminResultPageState extends State<AdminResultPage> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'ออก${selectedValue} เรียบร้อย',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
+              title: Center(
+                  child: Text(
+                'ออก${selectedValue} เรียบร้อย',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
               actions: <Widget>[
-                TextButton(
-                  child: Text('ตกลง'),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // ปิด dialog
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FilledButton(
+                      child: Text('ตกลง'),
+                      style: FilledButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                          foregroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
+                          textStyle: TextStyle(fontSize: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                          ),
+                          elevation: 5),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
+                      },
+                    ),
+                  ],
                 ),
               ],
             );
@@ -380,7 +410,7 @@ class _AdminResultPageState extends State<AdminResultPage> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('เกิดข้อผิดพลาด: ${response.body}')),
+          SnackBar(content: Text('ไม่มีเลขลอตโต้ให้ออกรางวัล')),
         );
       }
     } catch (e) {

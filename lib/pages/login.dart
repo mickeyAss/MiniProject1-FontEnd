@@ -180,13 +180,12 @@ class _LoginPageState extends State<LoginPage> {
       final response = await http.post(
         Uri.parse("$url/user/login"),
         headers: {"Content-Type": "application/json; charset=utf-8"},
-        body: jsonEncode(
-            model.toJson()), // ตรวจสอบว่ามีฟังก์ชัน toJson() ในโมเดลหรือไม่
+        body: jsonEncode(model.toJson()),
       );
-      var res = userloginPostResponeFromJson(response.body);
-      log(res.result[0].uid.toString());
 
       if (response.statusCode == 200) {
+        var res = userloginPostResponeFromJson(response.body);
+
         // ตรวจสอบข้อความที่ส่งกลับมา
         if (res.message == 'Login successfully') {
           if (res.userType == 'admin') {
@@ -206,12 +205,16 @@ class _LoginPageState extends State<LoginPage> {
           }
 
           log('Login successful: ${response.body}');
+        } else if (res.message ==
+            'ยังไม่ได้เป็นสมาชิก กรุณาสมัครสมาชิกก่อนเข้าสู่ระบบ') {
+          _showSnackBar('ยังไม่ได้เป็นสมาชิก กรุณาสมัครสมาชิกก่อนเข้าสู่ระบบ');
+          log('No user found: ${response.body}');
         } else {
           _showSnackBar('ข้อมูลเข้าสู่ระบบไม่ถูกต้อง');
           log('Login failed: ${response.body}');
         }
       } else {
-        _showSnackBar('เกิดข้อผิดพลาดในการเข้าสู่ระบบ');
+        _showSnackBar('ยังไม่ได้เป็นสมาชิก กรุณาสมัครสมาชิกก่อนเข้าสู่ระบบ');
         log('HTTP error: ${response.statusCode}');
       }
     } catch (error) {

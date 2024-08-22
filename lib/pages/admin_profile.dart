@@ -5,15 +5,15 @@ import 'package:project/pages/login.dart';
 import 'package:project/config/config.dart';
 import 'package:project/models/respone/user_get_uid_res.dart';
 
-class ProfilePage extends StatefulWidget {
+class AdminProfilePage extends StatefulWidget {
   int uid = 0;
-  ProfilePage({super.key, required this.uid});
+  AdminProfilePage({super.key, required this.uid});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<AdminProfilePage> createState() => _AdminProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _AdminProfilePageState extends State<AdminProfilePage> {
   String url = "";
   late UserlGetUidRespone user;
   late Future<void> loadData;

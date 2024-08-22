@@ -42,7 +42,7 @@ class _AdminRandomPagesState extends State<AdminRandomPages> {
                   elevation: 0, // ไม่มีเงา
                   iconTheme: IconThemeData(color: Colors.white),
                   title: Text(
-                    'Lotto click',
+                    'ย้อนกลับ',
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
@@ -239,88 +239,47 @@ class _AdminRandomPagesState extends State<AdminRandomPages> {
   }
 
   void randomnumber() async {
-    final random = Random();
-    final List<String> randomNumbers = [];
-
-    for (int i = 0; i < 100; i++) {
-      final number = List.generate(6, (index) => random.nextInt(10)).join();
-      randomNumbers.add(number); // เพิ่มเฉพาะเลขที่สุ่มได้
-    }
-
-    setState(() {
-      this.randomNumbers = randomNumbers;
-    });
-
-    // แสดง popup
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: const Color.fromARGB(
-              255, 255, 255, 255), // ตั้งค่าสีพื้นหลังของ AlertDialog
-          title: Text(
-            'ผลลัพธ์การหมุนลอตโต้',
-            style: TextStyle(color: Colors.black),
-          ),
-          content: Container(
-            width: 300,
-            height: 300,
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 5, // จำนวนคอลัมน์
-                crossAxisSpacing: 10, // ระยะห่างแนวนอน
-                mainAxisSpacing: 10, // ระยะห่างแนวตั้ง
-              ),
-              itemCount: randomNumbers.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.yellow, // สีพื้นหลังของเซลล์
-                    borderRadius: BorderRadius.circular(10), // ขอบมน
-                  ),
-                  child: Text(
-                    randomNumbers[index],
-                    style: TextStyle(fontSize: 12, color: Colors.black),
-                    textAlign: TextAlign.center,
-                  ),
-                );
-              },
-            ),
-          ),
-          actions: [
-            FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 0, 10, 103),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(); // ปิด popup
-              },
-              child: Text('ตกลง'),
-            ),
-          ],
-        );
-      },
-    );
-
     var config = await Configuration.getConfig();
     var url = config['apiEndpoint'];
 
-    // ส่งข้อมูลที่สุ่มไปยังเซิร์ฟเวอร์
-    for (var number in randomNumbers) {
-      var response = await http.post(
-        Uri.parse('$url/number_lotto/insertnumber'),
-        headers: {
-          'Content-Type': 'application/json', // ตั้งค่า header
-        },
-        body: jsonEncode({'number': number}), // ส่งข้อมูลในรูปแบบ JSON
-      );
+    // ตรวจสอบจำนวนข้อมูลปัจจุบัน
+    var responseCheck =
+        await http.get(Uri.parse('$url/number_lotto/getallnumber'));
 
-      if (response.statusCode == 200) {
-        print('ข้อมูลถูกส่งสำเร็จ');
-      } else {
-        print('เกิดข้อผิดพลาด: ${response.reasonPhrase}');
+    if (responseCheck.statusCode == 200) {
+      var data = lottoNumberGetResponeFromJson(responseCheck.body);
+
+      // ถ้าจำนวนข้อมูลครบ 100 แล้วจะไม่อนุญาตให้หมุนอีก
+      if (data.length >= 100) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('มีข้อมูลครบ 100 ชุดแล้ว ไม่สามารถหมุนได้อีก')));
+        return;
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('ไม่สามารถตรวจสอบจำนวนข้อมูลได้')));
+      return;
+    }
+
+    // ทำการหมุนลอตเตอรี่
+    var response = await http.post(
+      Uri.parse('$url/number_lotto/insertnumber'),
+      headers: {
+        'Content-Type': 'application/json', // ตั้งค่า header
+      },
+      body: jsonEncode({}),
+    );
+
+    if (response.statusCode == 200) {
+      // ถ้า insert สำเร็จ ให้เรียก getData() เพื่อโหลดข้อมูลใหม่
+      setState(() {
+        getData(); // โหลดข้อมูลใหม่มาแสดง
+      });
+    } else {
+      // ถ้ามี error ให้แสดงข้อความ error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('การหมุนล้มเหลว โปรดลองอีกครั้ง')),
+      );
     }
   }
 
@@ -329,9 +288,6 @@ class _AdminRandomPagesState extends State<AdminRandomPages> {
     var url = config['apiEndpoint'];
 
     var response = await http.get(Uri.parse('$url/number_lotto/getallnumber'));
-
-    // Log ค่า response.body ออกมา
-    print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       return lottoNumberGetResponeFromJson(response.body);

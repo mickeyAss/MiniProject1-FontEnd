@@ -367,35 +367,63 @@ class _ResultPageState extends State<ResultPage> {
     var config = await Configuration.getConfig();
     var url = config['apiEndpoint'];
     var res = await http.post(
-        Uri.parse('$url/user/update-wallet/${widget.uid}'),
+        Uri.parse('$url/user/update-wallet/${widget.uid}/${widget.lottoid}'),
         headers: {"Content-Type": "application/json; charset=utf-8"},
         body: jsonEncode({
           "prizeAmount": userMyresultRespone.prizeAmount
         })); // ส่งเป็น JSON object
     var v = jsonDecode(res.body);
-    log(v['message']); // แก้ไขจาก 'messsage' เป็น 'message'
 
     try {
-      if (v['message'] == 'Wallet updated successfully') {
+      if (v['message'] ==
+          'Wallet updated and lotto record deleted successfully') {
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('สำเร็จ'),
-            content: const Text('ขึ้นเงินเรียบร้อย'),
-            actions: [
-              FilledButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(uid: widget.uid),
-                      ),
-                    );
-                  },
-                  child: const Text('ปิด'))
-            ],
-          ),
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Center(
+                  child: Text(
+                'ขึ้นเงินสำเร็จ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('ยินดีด้วย'),
+                ],
+              ),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FilledButton(
+                      child: Text('ตกลง'),
+                      style: FilledButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                          foregroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
+                          textStyle: TextStyle(fontSize: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                          ),
+                          elevation: 5),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomePage(uid: widget.uid),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
         );
+        log(v['message']);
       } else {
         log('ไม่สามารถขึ้นเงินได้');
       }

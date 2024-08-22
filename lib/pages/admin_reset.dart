@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:project/pages/admin.dart';
+import 'package:project/pages/login.dart';
 import 'package:project/config/config.dart';
 
 class AdminResetPage extends StatefulWidget {
-  const AdminResetPage({super.key});
+  int uid = 0;
+  AdminResetPage({super.key, required this.uid});
 
   @override
   State<AdminResetPage> createState() => _AdminResetPageState();
@@ -14,7 +17,7 @@ class _AdminResetPageState extends State<AdminResetPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('รีเซ็ตระบบ'),
+        title: Text('ย้อนกลับ'),
       ),
       body: Column(
         children: [
@@ -106,6 +109,9 @@ class _AdminResetPageState extends State<AdminResetPage> {
 
                   textStyle: TextStyle(fontSize: 16), // ขนาดข้อความ
                   elevation: 15,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                  ),
                 ),
                 onPressed: delete,
                 child: Text(
@@ -127,24 +133,61 @@ class _AdminResetPageState extends State<AdminResetPage> {
     // แสดงการยืนยันก่อนลบ
     bool confirmDelete = await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('ยืนยันรีเซ็ท'),
-        content: Text('คุณต้องการรีเซ็ทระบบหรือไม่?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(false); // ยกเลิกการลบ
-            },
-            child: Text('ยกเลิก'),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(
+              child: Text(
+            'ยืนยันการรเซ็ทระบบ',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          )),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('คุณต้องการที่จะรีเซ็ตระบบจริงหรือไม่ ?'),
+            ],
           ),
-          FilledButton(
-            onPressed: () {
-              Navigator.of(context).pop(true); // ยืนยันการลบ
-            },
-            child: Text('ยืนยัน'),
-          ),
-        ],
-      ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                OutlinedButton(
+                  child: Text('ยกเลิก',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 0, 10, 103),
+                      )),
+                  onPressed: () {
+                    Navigator.of(context).pop(false); // ยกเลิกการลบ
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                        color: Color.fromARGB(255, 0, 10, 103),
+                        width: 2.0), // สีและความหนาของเส้นขอบ
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                    ),
+                  ),
+                ),
+                FilledButton(
+                  child: Text('รีเซ็ท'),
+                  style: FilledButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                      foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+                      textStyle: TextStyle(fontSize: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                      ),
+                      elevation: 5),
+                  onPressed: () {
+                    Navigator.of(context).pop(true); // ยกเลิกการลบ
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
 
     // ถ้าผู้ใช้ยืนยันการลบ
@@ -159,52 +202,135 @@ class _AdminResetPageState extends State<AdminResetPage> {
       if (res.statusCode == 200) {
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('สำเร็จ'),
-            content: Text('รีเซ็ทระบบสำเร็จ'),
-            actions: [
-              FilledButton(
-                  onPressed: () {
-                    Navigator.popUntil(
-                      context,
-                      (route) => route.isFirst,
-                    );
-                  },
-                  child: const Text('ตกลง'))
-            ],
-          ),
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Center(
+                  child: Text(
+                'สำเร็จ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('รีเซ็ทระบบสำเร็จ'),
+                ],
+              ),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FilledButton(
+                      child: Text('ตกลง'),
+                      style: FilledButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                          foregroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
+                          textStyle: TextStyle(fontSize: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                          ),
+                          elevation: 5),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AdminPages(uid: widget.uid),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
         );
-      } else if (res.statusCode == 404) {
+      } else if (res.statusCode == 500) {
         // ไม่มีข้อมูลให้ลบ
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('ผิดพลาด'),
-            content: Text('ไม่มีข้อมูลให้รีเซ็ท'),
-            actions: [
-              FilledButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('ปิด'))
-            ],
-          ),
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Center(
+                  child: Text(
+                'ผิลพลาด',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('ไม่มีข้อมูลให้รีเซ็ต'),
+                ],
+              ),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FilledButton(
+                      child: Text('ตกลง'),
+                      style: FilledButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                          foregroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
+                          textStyle: TextStyle(fontSize: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                          ),
+                          elevation: 5),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
         );
       } else {
         // ข้อผิดพลาดอื่น ๆ
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('ผิดพลาด'),
-            content: Text('รีเซ็ทระบบไม่สำเร็จ'),
-            actions: [
-              FilledButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('ปิด'))
-            ],
-          ),
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Center(
+                  child: Text(
+                'ผิลพลาด',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('รีเซ็ทระบบไม่สำเร็จ'),
+                ],
+              ),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FilledButton(
+                      child: Text('ตกลง'),
+                      style: FilledButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                          foregroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
+                          textStyle: TextStyle(fontSize: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                          ),
+                          elevation: 5),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
         );
       }
     }

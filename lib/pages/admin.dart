@@ -7,6 +7,7 @@ import 'package:project/pages/admin_lotto.dart';
 import 'package:project/pages/admin_reset.dart';
 import 'package:project/pages/admin_result.dart';
 import 'package:project/pages/admin_random.dart';
+import 'package:project/pages/admin_profile.dart';
 import 'package:project/models/respone/number_get_res.dart';
 import 'package:project/models/respone/route_lotto_res.dart';
 import 'package:project/models/respone/user_get_uid_res.dart';
@@ -31,46 +32,9 @@ class _AdminPagesState extends State<AdminPages> {
   List<NumberGetRespone> getnumber = [];
 
   void _onItemTapped(int index) {
-    if (index == 2) {
-      showDialog(
-        context: context,
-        builder: (context) => SimpleDialog(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'ต้องการออกจากระบบจริงหรือไม่?',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('ปิด'),
-                ),
-                FilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                      (route) => false,
-                    );
-                  },
-                  child: const Text('ยืนยัน'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    } else {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
@@ -81,18 +45,29 @@ class _AdminPagesState extends State<AdminPages> {
     routeId = routelotto();
   }
 
+  Future<void> _refreshData() async {
+    setState(() {
+      loadData = loadDataAsync();
+      loadLotto = getdataLotto();
+      routeId = routelotto();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: [
-          // หน้าแรก
-          buildHomePage(),
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: [
+            // หน้าแรก
+            buildHomePage(),
 
-          // หน้าแสดงลอตโต้ทั้งหมด
-          AdminLottoPage(),
-        ],
+            // หน้าแสดงลอตโต้ทั้งหมด
+            AdminLottoPage(),
+          ],
+        ),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -116,10 +91,6 @@ class _AdminPagesState extends State<AdminPages> {
             BottomNavigationBarItem(
               icon: Icon(Icons.stay_primary_landscape_sharp),
               label: 'ลอตโต้ทั้งหมด',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.logout),
-              label: 'ออกจากระบบ',
             ),
           ],
           currentIndex: _selectedIndex,
@@ -147,7 +118,7 @@ class _AdminPagesState extends State<AdminPages> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Lotto click',
+                'LOTTO CLICK',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -164,13 +135,24 @@ class _AdminPagesState extends State<AdminPages> {
                           child: CircularProgressIndicator(),
                         );
                       }
-                      return ClipOval(
-                        child: Image.network(
-                          userIdxGetResponse.image,
-                          width: 30,
-                          height: 30,
-                          fit: BoxFit.cover,
+                      return GestureDetector(
+                        child: ClipOval(
+                          child: Image.network(
+                            userIdxGetResponse.image,
+                            width: 30,
+                            height: 30,
+                            fit: BoxFit.cover,
+                          ),
                         ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AdminProfilePage(
+                                  uid: widget.uid,
+                                ),
+                              ));
+                        },
                       );
                     },
                   ),
@@ -307,7 +289,8 @@ class _AdminPagesState extends State<AdminPages> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AdminResetPage(),
+                                    builder: (context) => AdminResetPage(
+                                        uid: userIdxGetResponse.uid),
                                   ),
                                 );
                               },

@@ -24,6 +24,7 @@ class UserMyLottoRespone {
   String number;
   String price;
   String result;
+
   int uidFk;
 
   UserMyLottoRespone({

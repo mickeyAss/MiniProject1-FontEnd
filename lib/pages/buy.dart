@@ -35,6 +35,16 @@ class _BuyPageState extends State<BuyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor:
+            Color.fromARGB(255, 0, 10, 103), // ทำให้ AppBar โปร่งใส
+        elevation: 0, // ไม่มีเงา
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Text(
+          'ย้อนกลับ',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
       body: Stack(
         children: [
           Container(
@@ -43,27 +53,11 @@ class _BuyPageState extends State<BuyPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 14, right: 14, top: 35),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Lotto click',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 25,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 80),
+            padding: const EdgeInsets.only(top: 20),
             child: Column(
               children: [
                 Text(
-                  'กรอกเลขลอตเตอร์รี่ที่ต้องการค้นหา',
+                  'กรอกเลขลอตเตอร์รี่ที่ต้องกาซื้อ',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 15,
@@ -84,7 +78,7 @@ class _BuyPageState extends State<BuyPage> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 child: SizedBox(
-                                  width: 50,
+                                  width: 44,
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -143,10 +137,15 @@ class _BuyPageState extends State<BuyPage> {
                         padding: const EdgeInsets.only(left: 40, right: 40),
                         child: FilledButton(
                           style: FilledButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 255, 232, 56),
+                            backgroundColor:
+                                const Color.fromARGB(255, 255, 232, 56),
                             foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                            padding: EdgeInsets.symmetric(vertical: 8),
-                            textStyle: TextStyle(fontSize: 14),
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            textStyle: const TextStyle(fontSize: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                            ),
                             elevation: 15,
                           ),
                           onPressed: () {
@@ -185,7 +184,7 @@ class _BuyPageState extends State<BuyPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 250),
+            padding: const EdgeInsets.only(top: 180),
             child: FutureBuilder(
                 future: loadData,
                 builder: (context, snapshot) {
@@ -345,8 +344,8 @@ class _BuyPageState extends State<BuyPage> {
                                                         ),
                                                       ),
                                                     ),
-                                                    if (e.uidFk ==
-                                                        null) // ซ่อนปุ่มเลือกถ้าขายแล้ว
+                                                    if (e.uidFk == null)
+                                                      // ซ่อนปุ่มเลือกถ้าขายแล้ว
                                                       Expanded(
                                                         child: Padding(
                                                           padding:
@@ -418,23 +417,53 @@ class _BuyPageState extends State<BuyPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('ยืนยันการซื้อ'),
+          title: Center(
+              child: Text(
+            'ยืนยันการซื้อ',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          )),
           content: Text(
-              'คุณต้องการซื้อเลข ${number.number} ในราคา ${number.price} บาทหรือไม่?'),
+              'คุณต้องการซื้อเลข ${number.number} \nในราคา ${number.price} บาทหรือไม่?'),
           actions: <Widget>[
-            TextButton(
-              child: Text('ยกเลิก'),
-              onPressed: () {
-                Navigator.of(context).pop(); // ปิด popup เมื่อกดยกเลิก
-              },
-            ),
-            TextButton(
-              child: Text('ยืนยัน'),
-              onPressed: () {
-                // ส่งค่า lottoid และ uid ไปที่ API เมื่อยืนยันการซื้อ
-                buylotto(number.lottoid, widget.uid);
-                Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                OutlinedButton(
+                  child: Text('ยกเลิก',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 0, 10, 103),
+                      )),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // ปิด popup เมื่อกดยกเลิก
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                        color: Color.fromARGB(255, 0, 10, 103),
+                        width: 2.0), // สีและความหนาของเส้นขอบ
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                    ),
+                  ),
+                ),
+                FilledButton(
+                  child: Text('ยืนยัน'),
+                  style: FilledButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                      foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+                      textStyle: TextStyle(fontSize: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                      ),
+                      elevation: 5),
+                  onPressed: () {
+                    // ส่งค่า lottoid และ uid ไปที่ API เมื่อยืนยันการซื้อ
+                    buylotto(number.lottoid, widget.uid);
+                    Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
+                  },
+                ),
+              ],
             ),
           ],
         );
@@ -465,14 +494,38 @@ class _BuyPageState extends State<BuyPage> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('ซื้อสำเร็จ'),
-              content: Text('ขอบคุณ'),
+              title: Center(
+                  child: Text(
+                'ซื้อลอตโต้สำเร็จ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('ชอให้โชคดี'),
+                ],
+              ),
               actions: <Widget>[
-                TextButton(
-                  child: Text('ตกลง'),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FilledButton(
+                      child: Text('ตกลง'),
+                      style: FilledButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                          foregroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
+                          textStyle: TextStyle(fontSize: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                          ),
+                          elevation: 5),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
+                      },
+                    ),
+                  ],
                 ),
               ],
             );
@@ -485,14 +538,38 @@ class _BuyPageState extends State<BuyPage> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('ยอดเงินไม่เพียงพอ'),
-              content: Text('กรุณาเติมเงิน '),
+              title: Center(
+                  child: Text(
+                'ยอดเงินไม่เพียงพอ',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('กรุณาเติมเงิน'),
+                ],
+              ),
               actions: <Widget>[
-                TextButton(
-                  child: Text('ตกลง'),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FilledButton(
+                      child: Text('ตกลง'),
+                      style: FilledButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                          foregroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
+                          textStyle: TextStyle(fontSize: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                          ),
+                          elevation: 5),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
+                      },
+                    ),
+                  ],
                 ),
               ],
             );

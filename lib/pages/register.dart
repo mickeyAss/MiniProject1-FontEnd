@@ -121,6 +121,7 @@ class _RegisterPage extends State<RegisterPage> {
                           ),
                           SizedBox(height: 20),
                           TextField(
+                            obscureText: true,
                             controller: passWordCt1,
                             keyboardType: TextInputType.text,
                             decoration: InputDecoration(
@@ -131,6 +132,7 @@ class _RegisterPage extends State<RegisterPage> {
                           ),
                           SizedBox(height: 20),
                           TextField(
+                            obscureText: true,
                             controller: passWordConCt1,
                             keyboardType: TextInputType.text,
                             decoration: InputDecoration(
@@ -206,7 +208,8 @@ class _RegisterPage extends State<RegisterPage> {
     if (nameCt1.text.isEmpty ||
         phoneNoCtl.text.isEmpty ||
         emailCt1.text.isEmpty ||
-        passWordCt1.text.isEmpty) {
+        passWordCt1.text.isEmpty ||
+        walletCt1.text.isEmpty) {
       log('Fields cannot be empty');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -252,30 +255,47 @@ class _RegisterPage extends State<RegisterPage> {
               .then(
             (value) {
               log(value.body);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'สมัครสมาชิกเรียบร้อย',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  backgroundColor: Color.fromARGB(255, 89, 255, 0),
-                  duration: Duration(seconds: 3),
-                ),
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Center(
+                        child: Text(
+                      'สมัครสมาชิกเรียบร้อย',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )),
+                    actions: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FilledButton(
+                            child: Text('ตกลง'),
+                            style: FilledButton.styleFrom(
+                                backgroundColor:
+                                    Color.fromARGB(255, 0, 10, 103),
+                                foregroundColor:
+                                    const Color.fromARGB(255, 255, 255, 255),
+                                textStyle: TextStyle(fontSize: 14),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      8.0), // มุมโค้งของปุ่ม
+                                ),
+                                elevation: 5),
+                            onPressed: () {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()),
+                                (Route<dynamic> route) => false,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
               );
-              Future.delayed(const Duration(seconds: 1), () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => const HomePage(),
-                //   ),
-                // );
-
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                  (Route<dynamic> route) => false,
-                );
-              });
             },
           ).catchError((err) {
             log(err.toString());
