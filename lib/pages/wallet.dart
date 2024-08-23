@@ -1,12 +1,13 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:project/pages/top_up.dart';
 import 'package:project/config/config.dart';
 import 'package:project/pages/withdraw_money.dart';
 import 'package:project/models/respone/user_get_uid_res.dart';
 
 class WalletPage extends StatefulWidget {
-  final int uid;
+  int uid = 0;
   WalletPage({super.key, required this.uid});
 
   @override
@@ -160,7 +161,8 @@ class _WalletPageState extends State<WalletPage> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const WithdrawMoney(),
+                                                        WithdrawMoney(
+                                                            uid: widget.uid),
                                                   ),
                                                 );
                                               },
@@ -182,7 +184,16 @@ class _WalletPageState extends State<WalletPage> {
                                               ),
                                             ),
                                             FilledButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                 Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TopUpPage(
+                                                            uid: widget.uid),
+                                                  ),
+                                                );
+                                              },
                                               style: FilledButton.styleFrom(
                                                 backgroundColor: Colors.amber,
                                                 padding:

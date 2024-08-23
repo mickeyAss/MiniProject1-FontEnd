@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +20,9 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
   List<FocusNode> focusNodes = List.generate(6, (_) => FocusNode());
   String searchStatus = ''; // ใช้สำหรับเก็บข้อความสถานะของการค้นหา
 
+  final GlobalKey<State<StatefulWidget>> _sizedBoxKey = GlobalKey();
+  OverlayEntry? _overlayEntry;
+
   @override
   void initState() {
     super.initState();
@@ -30,39 +34,43 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 0, 10, 103),
-            ),
+          Image.asset(
+            "assets/images/bg1.jpg",
+            width: double.infinity,
+            height: 250,
+            fit: BoxFit.cover,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 14, right: 14, top: 35),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(0, 45, 20, 0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  'LOTTO CLICK',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 25,
+                Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Text(
+                    'LOTTO CLICK',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 80),
+            padding: const EdgeInsets.only(top: 90),
             child: Column(
               children: [
-                Text(
-                  'กรอกเลขลอตเตอร์รี่ที่ต้องการค้นหา',
+                const Text(
+                  'กรอกเลขที่ต้องการค้นหา',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.bold),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Expanded(
@@ -89,7 +97,7 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                                       keyboardType: TextInputType.number,
                                       textAlign: TextAlign.center,
                                       maxLength: 1,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                         counterText: '',
                                         hintStyle:
                                             TextStyle(color: Colors.black54),
@@ -131,7 +139,7 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.only(left: 40, right: 40),
                         child: FilledButton(
@@ -153,7 +161,7 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                                 .join();
                             searchNumber(searchQuery);
                           },
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
@@ -170,11 +178,26 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Text(
                         searchStatus,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.red, fontWeight: FontWeight.bold),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "ลอตโต้งวดนี้",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: const Color.fromARGB(255, 0, 10, 103),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -183,7 +206,7 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 250),
+            padding: const EdgeInsets.only(top: 300),
             child: FutureBuilder(
                 future: loadData,
                 builder: (context, snapshot) {
@@ -195,7 +218,7 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 40, right: 40),
+                                        left: 20, right: 20),
                                     child: SizedBox(
                                       width: 350,
                                       height: 160,
@@ -205,7 +228,7 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                                               ? Colors.white
                                               : Colors
                                                   .grey, // เปลี่ยนสีพื้นหลัง
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                               Radius.circular(20)),
                                           boxShadow: [
                                             BoxShadow(
@@ -213,7 +236,7 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                                                   Colors.black.withOpacity(0.3),
                                               spreadRadius: 1,
                                               blurRadius: 1,
-                                              offset: Offset(0, 1),
+                                              offset: const Offset(0, 1),
                                             ),
                                           ],
                                         ),
@@ -235,9 +258,11 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                                                           : 'ขายแล้ว',
                                                       style: TextStyle(
                                                         color: e.uidFk == null
-                                                            ? Color.fromARGB(
+                                                            ? const Color
+                                                                .fromARGB(
                                                                 255, 8, 198, 2)
-                                                            : Color.fromARGB(
+                                                            : const Color
+                                                                .fromARGB(
                                                                 255, 255, 0, 0),
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -248,108 +273,106 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                                                     width: 50,
                                                     height: 50,
                                                     child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    0,
-                                                                    10,
-                                                                    103),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            20)),
-                                                            boxShadow: [
-                                                              BoxShadow(
-                                                                  color: Colors
-                                                                      .black
-                                                                      .withOpacity(
-                                                                          0.3),
-                                                                  spreadRadius:
-                                                                      1,
-                                                                  blurRadius: 1,
-                                                                  offset:
-                                                                      Offset(
-                                                                          0, 1))
-                                                            ]),
-                                                        child: Image.asset(
-                                                            'assets/images/logo.png')),
+                                                      decoration: BoxDecoration(
+                                                        color: const Color
+                                                            .fromARGB(
+                                                            255, 0, 10, 103),
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .all(
+                                                                Radius.circular(
+                                                                    20)),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.3),
+                                                            spreadRadius: 1,
+                                                            blurRadius: 1,
+                                                            offset:
+                                                                const Offset(
+                                                                    0, 1),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: Image.asset(
+                                                          'assets/images/logo.png'),
+                                                    ),
                                                   ),
                                                   Text(
                                                     '${e.price} บาท',
-                                                    style: TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 0, 10, 103),
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18),
+                                                    style: const TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 0, 10, 103),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                              SizedBox(
-                                                width: 20,
-                                              ),
+                                              const SizedBox(width: 40),
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 6),
                                                 child: Column(
                                                   children: [
-                                                    Text(
+                                                    const Text(
                                                       'LOTTO CLICK',
                                                       style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 20),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20,
+                                                      ),
                                                     ),
                                                     SizedBox(
                                                       width: 190,
                                                       height: 50,
                                                       child: Container(
-                                                          decoration: BoxDecoration(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      0,
-                                                                      10,
-                                                                      103),
-                                                              borderRadius: BorderRadius
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: const Color
+                                                              .fromARGB(
+                                                              255, 0, 10, 103),
+                                                          borderRadius:
+                                                              const BorderRadius
                                                                   .all(Radius
                                                                       .circular(
-                                                                          20)),
-                                                              boxShadow: [
-                                                                BoxShadow(
-                                                                    color: Colors
-                                                                        .black
-                                                                        .withOpacity(
-                                                                            0.3),
-                                                                    spreadRadius:
-                                                                        1,
-                                                                    blurRadius:
-                                                                        1,
-                                                                    offset:
-                                                                        Offset(
-                                                                            0,
-                                                                            1))
-                                                              ]),
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                e.number,
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        30,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              )
-                                                            ],
-                                                          )),
+                                                                          15)),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.3),
+                                                              spreadRadius: 1,
+                                                              blurRadius: 1,
+                                                              offset:
+                                                                  const Offset(
+                                                                      0, 1),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              e.number,
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 30,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -360,7 +383,7 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                   )
                                 ],
@@ -372,6 +395,61 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
           ),
         ],
       ),
+    );
+  }
+
+  void showPurchaseDialog(NumberGetRespone number) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(
+              child: Text(
+            'ยืนยันการซื้อ',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          )),
+          content: Text(
+              'คุณต้องการซื้อเลข ${number.number} \nในราคา ${number.price} บาทหรือไม่?'),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                OutlinedButton(
+                  child: const Text('ยกเลิก',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 0, 10, 103),
+                      )),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // ปิด popup เมื่อกดยกเลิก
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(
+                        color: Color.fromARGB(255, 0, 10, 103),
+                        width: 2.0), // สีและความหนาของเส้นขอบ
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                    ),
+                  ),
+                ),
+                FilledButton(
+                  child: const Text('ยืนยัน'),
+                  style: FilledButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 0, 10, 103),
+                      foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+                      textStyle: const TextStyle(fontSize: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                      ),
+                      elevation: 5),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -417,9 +495,6 @@ class _AdminLottoPageState extends State<AdminLottoPage> {
           });
         } else {
           log('Request failed with status: ${response.statusCode}.');
-          setState(() {
-            searchStatus = 'เกิดข้อผิดพลาด'; // แสดงข้อความเมื่อเกิดข้อผิดพลาด
-          });
         }
       }
     } catch (e) {

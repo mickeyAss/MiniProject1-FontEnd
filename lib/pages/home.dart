@@ -24,12 +24,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String? selectedDate;
-  List<String> date = [
-    "1 สิงหาคม 2567",
-    "16 กรกฎาคม 2567",
-    "1 กรกฎาคม 2567",
-  ];
   String url = "";
   late UserlGetUidRespone user;
   List<NumberGetRespone> num = [];
@@ -83,7 +77,7 @@ class _HomePageState extends State<HomePage> {
               color: Colors.black.withOpacity(0.3),
               spreadRadius: 1,
               blurRadius: 10,
-              offset: Offset(0, -1),
+              offset: const Offset(0, -1),
             ),
           ],
         ),
@@ -220,7 +214,8 @@ class _HomePageState extends State<HomePage> {
                                                       TextInputType.number,
                                                   textAlign: TextAlign.center,
                                                   maxLength: 1,
-                                                  decoration: InputDecoration(
+                                                  decoration:
+                                                      const InputDecoration(
                                                     counterText: '',
                                                     hintStyle: TextStyle(
                                                         color: Colors.black54),
@@ -307,7 +302,7 @@ class _HomePageState extends State<HomePage> {
                                                     .join();
                                             searchNumber(searchQuery);
                                           },
-                                          child: Text(
+                                          child: const Text(
                                             'ตรวจเลขลอตโต้',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
@@ -319,7 +314,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      const EdgeInsets.fromLTRB(0, 50, 0, 0),
                                   child: Card(
                                     shape: RoundedRectangleBorder(
                                       borderRadius:
@@ -428,7 +423,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               }),
-          SizedBox(height: 10),
+          const SizedBox(height: 20),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             height: 220,
@@ -436,13 +431,13 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(20)),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.3),
                     spreadRadius: 1,
                     blurRadius: 1,
-                    offset: Offset(0, 1),
+                    offset: const Offset(0, 1),
                   ),
                 ],
               ),
@@ -450,8 +445,8 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 14),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 14),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -478,7 +473,7 @@ class _HomePageState extends State<HomePage> {
                             }
 
                             if (num.isEmpty) {
-                              return Center(
+                              return const Center(
                                 child: Text(
                                   'ยังไม่ออกรางวัล',
                                   style: TextStyle(
@@ -503,11 +498,11 @@ class _HomePageState extends State<HomePage> {
                                       Text(e.result),
                                       Text(
                                         e.number,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      SizedBox(height: 10),
+                                      const SizedBox(height: 10),
                                     ],
                                   ),
                                 ));
@@ -517,11 +512,11 @@ class _HomePageState extends State<HomePage> {
                                     Text(e.result),
                                     Text(
                                       e.number,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                   ],
                                 ));
                               } else {
@@ -532,11 +527,11 @@ class _HomePageState extends State<HomePage> {
                                       Text(e.result),
                                       Text(
                                         e.number,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      SizedBox(height: 10),
+                                      const SizedBox(height: 10),
                                     ],
                                   ),
                                 ));
@@ -589,42 +584,8 @@ class _HomePageState extends State<HomePage> {
       var url = config['apiEndpoint'];
 
       if (number.isEmpty) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Center(
-                  child: Text(
-                'กรุณากรอกเลขลอตโต้',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )),
-              content: Text('โปรดกรอกเลขลอตโต้ที่ต้องการตรวจ'),
-              actions: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FilledButton(
-                      child: Text('ตกลง'),
-                      style: FilledButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 0, 10, 103),
-                          foregroundColor:
-                              const Color.fromARGB(255, 255, 255, 255),
-                          textStyle: TextStyle(fontSize: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
-                          ),
-                          elevation: 5),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            );
-          },
-        );
+        // ถ้าหมายเลขค้นหาว่าง ให้โหลดข้อมูลทั้งหมด
+        await getData();
       } else {
         // ค้นหาตามหมายเลขที่ป้อนและ uid
         var searchUrl = Uri.parse(
@@ -639,57 +600,95 @@ class _HomePageState extends State<HomePage> {
           // สมมุติว่า message เก็บข้อความที่คุณต้องการตรวจสอบ
           if (responseBody['message'] == 'รางวัลที่ 1') {
             log('รางวัลที่1');
-
             showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Center(
-                      child: Text(
-                    'ผลการค้นหา',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  )),
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('คุณถูกรางวัลที่ 1'),
-                    ],
-                  ),
-                  actions: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        OutlinedButton(
-                          child: Text('ยกเลิก',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 0, 10, 103),
-                              )),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pop(); // ปิด popup เมื่อกดยกเลิก
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                                color: Color.fromARGB(255, 0, 10, 103),
-                                width: 2.0), // สีและความหนาของเส้นขอบ
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                  content: SizedBox(
+                    width: 300, // ปรับขนาดความกว้างที่นี่
+                    height: 350, // ปรับขนาดความสูงที่นี่
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: SizedBox(
+                              width: 200,
+                              height: 60,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color.fromARGB(255, 0, 10, 103),
+                                  borderRadius: BorderRadius.circular(
+                                      15), // ปรับค่าขอบมนที่นี่
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        '${v.result[0].number}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+
+                          const SizedBox(
+                              height: 10), // เว้นระยะห่างระหว่างข้อความและปุ่ม
+
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${v.result[0].result}',
+                                  style: const TextStyle(
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 0, 10, 103),
+                                  ),
+                                ),
+                                const Text(
+                                  "ขอแสดงความยินดี",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 10, 103),
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Image.asset(
+                                  "assets/images/happy.png",
+                                  width: 170,
+                                  height: 170,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  actions: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         FilledButton(
-                          child: Text('ขึ้นเงินรางวัล'),
                           style: FilledButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 0, 10, 103),
-                              foregroundColor:
-                                  const Color.fromARGB(255, 255, 255, 255),
-                              textStyle: TextStyle(fontSize: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    8.0), // มุมโค้งของปุ่ม
-                              ),
-                              elevation: 5),
+                              backgroundColor: const Color.fromARGB(
+                                  255, 255, 207, 15), // สีพื้นหลังของปุ่ม
+                              foregroundColor: Colors.white, // สีข้อความบนปุ่ม
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              textStyle:
+                                  const TextStyle(fontSize: 16), // ขนาดข้อความ
+                              elevation: 18),
                           onPressed: () {
                             Navigator.of(context).pop();
                             Navigator.push(
@@ -700,6 +699,16 @@ class _HomePageState extends State<HomePage> {
                                     lottoid: v.result[0].lottoid),
                               ),
                             );
+                          },
+                          child: const Text(
+                            'ขึ้นเงินรางวัล',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        TextButton(
+                          child: const Text('ตกลง'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
                           },
                         ),
                       ],
@@ -710,57 +719,95 @@ class _HomePageState extends State<HomePage> {
             );
           } else if (responseBody['message'] == 'รางวัลที่ 2') {
             log('รางวัลที่2');
-
             showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Center(
-                      child: Text(
-                    'ผลการค้นหา',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  )),
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('คุณถูกรางวัลที่ 2'),
-                    ],
-                  ),
-                  actions: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        OutlinedButton(
-                          child: Text('ยกเลิก',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 0, 10, 103),
-                              )),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pop(); // ปิด popup เมื่อกดยกเลิก
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                                color: Color.fromARGB(255, 0, 10, 103),
-                                width: 2.0), // สีและความหนาของเส้นขอบ
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                  content: SizedBox(
+                    width: 300, // ปรับขนาดความกว้างที่นี่
+                    height: 350, // ปรับขนาดความสูงที่นี่
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: SizedBox(
+                              width: 200,
+                              height: 60,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color.fromARGB(255, 0, 10, 103),
+                                  borderRadius: BorderRadius.circular(
+                                      15), // ปรับค่าขอบมนที่นี่
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        '${v.result[0].number}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+
+                          const SizedBox(
+                              height: 10), // เว้นระยะห่างระหว่างข้อความและปุ่ม
+
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${v.result[0].result}',
+                                  style: const TextStyle(
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 0, 10, 103),
+                                  ),
+                                ),
+                                const Text(
+                                  "ขอแสดงความยินดี",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 10, 103),
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Image.asset(
+                                  "assets/images/happy.png",
+                                  width: 170,
+                                  height: 170,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  actions: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         FilledButton(
-                          child: Text('ขึ้นเงินรางวัล'),
                           style: FilledButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 0, 10, 103),
-                              foregroundColor:
-                                  const Color.fromARGB(255, 255, 255, 255),
-                              textStyle: TextStyle(fontSize: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    8.0), // มุมโค้งของปุ่ม
-                              ),
-                              elevation: 5),
+                              backgroundColor: const Color.fromARGB(
+                                  255, 255, 207, 15), // สีพื้นหลังของปุ่ม
+                              foregroundColor: Colors.white, // สีข้อความบนปุ่ม
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              textStyle:
+                                  const TextStyle(fontSize: 16), // ขนาดข้อความ
+                              elevation: 18),
                           onPressed: () {
                             Navigator.of(context).pop();
                             Navigator.push(
@@ -771,6 +818,16 @@ class _HomePageState extends State<HomePage> {
                                     lottoid: v.result[0].lottoid),
                               ),
                             );
+                          },
+                          child: const Text(
+                            'ขึ้นเงินรางวัล',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        TextButton(
+                          child: const Text('ตกลง'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
                           },
                         ),
                       ],
@@ -781,57 +838,95 @@ class _HomePageState extends State<HomePage> {
             );
           } else if (responseBody['message'] == 'รางวัลที่ 3') {
             log('รางวัลที่3');
-
             showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Center(
-                      child: Text(
-                    'ผลการค้นหา',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  )),
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('คุณถูกรางวัลที่ 3'),
-                    ],
-                  ),
-                  actions: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        OutlinedButton(
-                          child: Text('ยกเลิก',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 0, 10, 103),
-                              )),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pop(); // ปิด popup เมื่อกดยกเลิก
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                                color: Color.fromARGB(255, 0, 10, 103),
-                                width: 2.0), // สีและความหนาของเส้นขอบ
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                  content: SizedBox(
+                    width: 300, // ปรับขนาดความกว้างที่นี่
+                    height: 350, // ปรับขนาดความสูงที่นี่
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: SizedBox(
+                              width: 200,
+                              height: 60,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color.fromARGB(255, 0, 10, 103),
+                                  borderRadius: BorderRadius.circular(
+                                      15), // ปรับค่าขอบมนที่นี่
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        '${v.result[0].number}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+
+                          const SizedBox(
+                              height: 10), // เว้นระยะห่างระหว่างข้อความและปุ่ม
+
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${v.result[0].result}',
+                                  style: const TextStyle(
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 0, 10, 103),
+                                  ),
+                                ),
+                                const Text(
+                                  "ขอแสดงความยินดี",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 10, 103),
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Image.asset(
+                                  "assets/images/happy.png",
+                                  width: 170,
+                                  height: 170,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  actions: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         FilledButton(
-                          child: Text('ขึ้นเงินรางวัล'),
                           style: FilledButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 0, 10, 103),
-                              foregroundColor:
-                                  const Color.fromARGB(255, 255, 255, 255),
-                              textStyle: TextStyle(fontSize: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    8.0), // มุมโค้งของปุ่ม
-                              ),
-                              elevation: 5),
+                              backgroundColor: const Color.fromARGB(
+                                  255, 255, 207, 15), // สีพื้นหลังของปุ่ม
+                              foregroundColor: Colors.white, // สีข้อความบนปุ่ม
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              textStyle:
+                                  const TextStyle(fontSize: 16), // ขนาดข้อความ
+                              elevation: 18),
                           onPressed: () {
                             Navigator.of(context).pop();
                             Navigator.push(
@@ -842,6 +937,16 @@ class _HomePageState extends State<HomePage> {
                                     lottoid: v.result[0].lottoid),
                               ),
                             );
+                          },
+                          child: const Text(
+                            'ขึ้นเงินรางวัล',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        TextButton(
+                          child: const Text('ตกลง'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
                           },
                         ),
                       ],
@@ -852,57 +957,95 @@ class _HomePageState extends State<HomePage> {
             );
           } else if (responseBody['message'] == 'รางวัลที่ 4') {
             log('รางวัลที่4');
-
             showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Center(
-                      child: Text(
-                    'ผลการค้นหา',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  )),
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('คุณถูกรางวัลที่ 4'),
-                    ],
-                  ),
-                  actions: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        OutlinedButton(
-                          child: Text('ยกเลิก',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 0, 10, 103),
-                              )),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pop(); // ปิด popup เมื่อกดยกเลิก
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                                color: Color.fromARGB(255, 0, 10, 103),
-                                width: 2.0), // สีและความหนาของเส้นขอบ
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                  content: SizedBox(
+                    width: 300, // ปรับขนาดความกว้างที่นี่
+                    height: 350, // ปรับขนาดความสูงที่นี่
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: SizedBox(
+                              width: 200,
+                              height: 60,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color.fromARGB(255, 0, 10, 103),
+                                  borderRadius: BorderRadius.circular(
+                                      15), // ปรับค่าขอบมนที่นี่
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        '${v.result[0].number}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+
+                          const SizedBox(
+                              height: 10), // เว้นระยะห่างระหว่างข้อความและปุ่ม
+
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${v.result[0].result}',
+                                  style: const TextStyle(
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 0, 10, 103),
+                                  ),
+                                ),
+                                const Text(
+                                  "ขอแสดงความยินดี",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 10, 103),
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Image.asset(
+                                  "assets/images/happy.png",
+                                  width: 170,
+                                  height: 170,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  actions: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         FilledButton(
-                          child: Text('ขึ้นเงินรางวัล'),
                           style: FilledButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 0, 10, 103),
-                              foregroundColor:
-                                  const Color.fromARGB(255, 255, 255, 255),
-                              textStyle: TextStyle(fontSize: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    8.0), // มุมโค้งของปุ่ม
-                              ),
-                              elevation: 5),
+                              backgroundColor: const Color.fromARGB(
+                                  255, 255, 207, 15), // สีพื้นหลังของปุ่ม
+                              foregroundColor: Colors.white, // สีข้อความบนปุ่ม
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              textStyle:
+                                  const TextStyle(fontSize: 16), // ขนาดข้อความ
+                              elevation: 18),
                           onPressed: () {
                             Navigator.of(context).pop();
                             Navigator.push(
@@ -913,6 +1056,16 @@ class _HomePageState extends State<HomePage> {
                                     lottoid: v.result[0].lottoid),
                               ),
                             );
+                          },
+                          child: const Text(
+                            'ขึ้นเงินรางวัล',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        TextButton(
+                          child: const Text('ตกลง'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
                           },
                         ),
                       ],
@@ -923,57 +1076,94 @@ class _HomePageState extends State<HomePage> {
             );
           } else if (responseBody['message'] == 'รางวัลที่ 5') {
             log('รางวัลที่5');
-
             showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Center(
-                      child: Text(
-                    'ผลการค้นหา',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  )),
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('คุณถูกรางวัลที่ 5'),
-                    ],
-                  ),
-                  actions: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        OutlinedButton(
-                          child: Text('ยกเลิก',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 0, 10, 103),
-                              )),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pop(); // ปิด popup เมื่อกดยกเลิก
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                                color: Color.fromARGB(255, 0, 10, 103),
-                                width: 2.0), // สีและความหนาของเส้นขอบ
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
+                  content: SizedBox(
+                    width: 300, // ปรับขนาดความกว้างที่นี่
+                    height: 350, // ปรับขนาดความสูงที่นี่
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: SizedBox(
+                              width: 200,
+                              height: 60,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color.fromARGB(255, 0, 10, 103),
+                                  borderRadius: BorderRadius.circular(
+                                      15), // ปรับค่าขอบมนที่นี่
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        '${v.result[0].number}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+
+                          const SizedBox(
+                              height: 10), // เว้นระยะห่างระหว่างข้อความและปุ่ม
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${v.result[0].result}',
+                                  style: const TextStyle(
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 0, 10, 103),
+                                  ),
+                                ),
+                                const Text(
+                                  "ขอแสดงความยินดี",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 10, 103),
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Image.asset(
+                                  "assets/images/happy.png",
+                                  width: 170,
+                                  height: 170,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  actions: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         FilledButton(
-                          child: Text('ขึ้นเงินรางวัล'),
                           style: FilledButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 0, 10, 103),
-                              foregroundColor:
-                                  const Color.fromARGB(255, 255, 255, 255),
-                              textStyle: TextStyle(fontSize: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    8.0), // มุมโค้งของปุ่ม
-                              ),
-                              elevation: 5),
+                              backgroundColor: const Color.fromARGB(
+                                  255, 255, 207, 15), // สีพื้นหลังของปุ่ม
+                              foregroundColor: Colors.white, // สีข้อความบนปุ่ม
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              textStyle:
+                                  const TextStyle(fontSize: 16), // ขนาดข้อความ
+                              elevation: 18),
                           onPressed: () {
                             Navigator.of(context).pop();
                             Navigator.push(
@@ -984,6 +1174,16 @@ class _HomePageState extends State<HomePage> {
                                     lottoid: v.result[0].lottoid),
                               ),
                             );
+                          },
+                          child: const Text(
+                            'ขึ้นเงินรางวัล',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        TextButton(
+                          child: const Text('ตกลง'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
                           },
                         ),
                       ],
@@ -998,36 +1198,91 @@ class _HomePageState extends State<HomePage> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Center(
-                      child: Text(
-                    'ผลการค้นหา',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  )),
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('คุณไม่ถูกรางวัล'),
-                    ],
+                  content: SizedBox(
+                    width: 300, // ปรับขนาดความกว้างที่นี่
+                    height: 350, // ปรับขนาดความสูงที่นี่
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: SizedBox(
+                              width: 200,
+                              height: 60,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color.fromARGB(255, 0, 10, 103),
+                                  borderRadius: BorderRadius.circular(
+                                      15), // ปรับค่าขอบมนที่นี่
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        '${v.result[0].number}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(
+                              height: 10), // เว้นระยะห่างระหว่างข้อความและปุ่ม
+
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                const Text(
+                                  'ไม่ถูกรางวัล',
+                                  style: TextStyle(
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 0, 10, 103),
+                                  ),
+                                ),
+                                const Text(
+                                  "ขอแสดงความเสียใจ",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 10, 103),
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Image.asset(
+                                  "assets/images/sad.png",
+                                  width: 200,
+                                  height: 200,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  actions: <Widget>[
+                  actions: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FilledButton(
-                          child: Text('ตกลง'),
                           style: FilledButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 0, 10, 103),
-                              foregroundColor:
-                                  const Color.fromARGB(255, 255, 255, 255),
-                              textStyle: TextStyle(fontSize: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    8.0), // มุมโค้งของปุ่ม
-                              ),
-                              elevation: 5),
+                            backgroundColor: Colors.indigo.shade900,
+                          ),
+                          child: const Text(
+                            'ตกลง',
+                            style: TextStyle(fontSize: 20),
+                          ),
                           onPressed: () {
-                            Navigator.of(context)
-                                .pop(); // ปิด popup หลังจากยืนยัน
+                            Navigator.of(context).pop();
                           },
                         ),
                       ],
@@ -1037,6 +1292,67 @@ class _HomePageState extends State<HomePage> {
               },
             );
           }
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'คุณยังไม่ได้ซื้อลอตโต้เลขนี้',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 0, 10, 103)),
+                      ),
+                      Text(
+                        'กร6ณาซื้อลอตโต้เพื่อตรวจรางวัล',
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Color.fromARGB(255, 0, 10, 103)),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      FilledButton(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.indigo.shade900,
+                        ),
+                        child: const Text('ซื้อลอตโต้'),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BuyPage(
+                                        uid: widget.uid,
+                                      )));
+                        },
+                      ),
+                      TextButton(
+                        child: const Text(
+                          'ตกลง',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 0, 10, 103),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          );
+          log('Request failed with status: ${response.statusCode}.');
         }
       }
     } catch (e) {
@@ -1044,35 +1360,60 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Center(
-                child: Text(
-              'คุณไม่ได้ซื้อเลขลอตโต้นี้',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            )),
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('ตรวจสอบลอตโต้ของคุณ'),
-              ],
+            content: SizedBox(
+              width: 300,
+              height: 150,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Text(
+                    'คุณยังไม่ได้ซื้อลอตโต้เลขนี้',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 0, 10, 103)),
+                  ),
+                  const Text(
+                    'กรุณาซื้อลอตโต้เพื่อตรวจรางวัล',
+                    style: TextStyle(
+                        fontSize: 18, color: Color.fromARGB(255, 0, 10, 103)),
+                  ),
+                  Image.asset(
+                    "assets/images/um.png",
+                    width: 80,
+                    height: 80,
+                  ),
+                ],
+              ),
             ),
-            actions: <Widget>[
+            actions: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   FilledButton(
-                    child: Text('ตกลง'),
                     style: FilledButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 0, 10, 103),
-                        foregroundColor:
-                            const Color.fromARGB(255, 255, 255, 255),
-                        textStyle: TextStyle(fontSize: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
-                        ),
-                        elevation: 5),
+                      backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                    ),
+                    child: const Text('ซื้อลอตโต้'),
                     onPressed: () {
-                      Navigator.of(context).pop(); // ปิด popup หลังจากยืนยัน
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BuyPage(
+                                    uid: widget.uid,
+                                  )));
+                    },
+                  ),
+                  TextButton(
+                    child: const Text(
+                      'ตกลง',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 0, 10, 103),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
                     },
                   ),
                 ],

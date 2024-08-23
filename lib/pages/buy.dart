@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
+import 'package:project/pages/home.dart';
 import 'package:project/config/config.dart';
 import 'package:project/models/respone/number_get_res.dart';
 
@@ -35,35 +36,51 @@ class _BuyPageState extends State<BuyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true, // ทำให้ AppBar อยู่บนภาพพื้นหลัง
       appBar: AppBar(
-        backgroundColor:
-            Color.fromARGB(255, 0, 10, 103), // ทำให้ AppBar โปร่งใส
+        backgroundColor: Colors.transparent, // ทำให้ AppBar โปร่งใส
         elevation: 0, // ไม่มีเงา
-        iconTheme: IconThemeData(color: Colors.white),
-        title: Text(
-          'ย้อนกลับ',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+       
       ),
       body: Stack(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 0, 10, 103),
+            Image.asset(
+            "assets/images/bg1.jpg",
+            width: double.infinity,
+            height: 250,
+            fit: BoxFit.cover,
+          ),
+           const Padding(
+            padding: EdgeInsets.fromLTRB(50, 45, 20, 0),
+            child: Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 55),
+                  child: Text(
+                    'เลือกซื้อลอตโต้',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.only(top: 90),
             child: Column(
               children: [
-                Text(
-                  'กรอกเลขลอตเตอร์รี่ที่ต้องกาซื้อ',
+                const Text(
+                  'กรอกเลขลอตเตอร์รี่ที่ต้องการซื้อ',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.bold),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Expanded(
@@ -90,7 +107,7 @@ class _BuyPageState extends State<BuyPage> {
                                       keyboardType: TextInputType.number,
                                       textAlign: TextAlign.center,
                                       maxLength: 1,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                         counterText: '',
                                         hintStyle:
                                             TextStyle(color: Colors.black54),
@@ -132,7 +149,7 @@ class _BuyPageState extends State<BuyPage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.only(left: 40, right: 40),
                         child: FilledButton(
@@ -154,7 +171,7 @@ class _BuyPageState extends State<BuyPage> {
                                 .join();
                             searchNumber(searchQuery);
                           },
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
@@ -171,20 +188,38 @@ class _BuyPageState extends State<BuyPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Text(
                         searchStatus,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.red, fontWeight: FontWeight.bold),
                       ),
+                      const Padding(
+                          padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "ลอตโต้งวดนี้",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color:
+                                        const Color.fromARGB(255, 0, 10, 103),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
                     ],
                   ),
                 ),
+               
               ],
             ),
           ),
+          
           Padding(
-            padding: const EdgeInsets.only(top: 180),
+            padding: const EdgeInsets.only(top: 300),
             child: FutureBuilder(
                 future: loadData,
                 builder: (context, snapshot) {
@@ -196,7 +231,7 @@ class _BuyPageState extends State<BuyPage> {
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 40, right: 40),
+                                        left: 20, right: 20),
                                     child: SizedBox(
                                       width: 350,
                                       height: 160,
@@ -206,7 +241,7 @@ class _BuyPageState extends State<BuyPage> {
                                               ? Colors.white
                                               : Colors
                                                   .grey, // เปลี่ยนสีพื้นหลัง
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                               Radius.circular(20)),
                                           boxShadow: [
                                             BoxShadow(
@@ -214,7 +249,7 @@ class _BuyPageState extends State<BuyPage> {
                                                   Colors.black.withOpacity(0.3),
                                               spreadRadius: 1,
                                               blurRadius: 1,
-                                              offset: Offset(0, 1),
+                                              offset: const Offset(0, 1),
                                             ),
                                           ],
                                         ),
@@ -236,9 +271,9 @@ class _BuyPageState extends State<BuyPage> {
                                                           : 'ขายแล้ว',
                                                       style: TextStyle(
                                                         color: e.uidFk == null
-                                                            ? Color.fromARGB(
+                                                            ? const Color.fromARGB(
                                                                 255, 8, 198, 2)
-                                                            : Color.fromARGB(
+                                                            : const Color.fromARGB(
                                                                 255, 255, 0, 0),
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -250,10 +285,10 @@ class _BuyPageState extends State<BuyPage> {
                                                     height: 50,
                                                     child: Container(
                                                       decoration: BoxDecoration(
-                                                        color: Color.fromARGB(
+                                                        color: const Color.fromARGB(
                                                             255, 0, 10, 103),
                                                         borderRadius:
-                                                            BorderRadius.all(
+                                                            const BorderRadius.all(
                                                                 Radius.circular(
                                                                     20)),
                                                         boxShadow: [
@@ -264,7 +299,7 @@ class _BuyPageState extends State<BuyPage> {
                                                             spreadRadius: 1,
                                                             blurRadius: 1,
                                                             offset:
-                                                                Offset(0, 1),
+                                                                const Offset(0, 1),
                                                           ),
                                                         ],
                                                       ),
@@ -274,7 +309,7 @@ class _BuyPageState extends State<BuyPage> {
                                                   ),
                                                   Text(
                                                     '${e.price} บาท',
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       color: Color.fromARGB(
                                                           255, 0, 10, 103),
                                                       fontWeight:
@@ -284,13 +319,13 @@ class _BuyPageState extends State<BuyPage> {
                                                   ),
                                                 ],
                                               ),
-                                              SizedBox(width: 20),
+                                              const SizedBox(width:40),
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 6),
                                                 child: Column(
                                                   children: [
-                                                    Text(
+                                                    const Text(
                                                       'LOTTO CLICK',
                                                       style: TextStyle(
                                                         fontWeight:
@@ -304,13 +339,13 @@ class _BuyPageState extends State<BuyPage> {
                                                       child: Container(
                                                         decoration:
                                                             BoxDecoration(
-                                                          color: Color.fromARGB(
+                                                          color: const Color.fromARGB(
                                                               255, 0, 10, 103),
                                                           borderRadius:
-                                                              BorderRadius.all(
+                                                              const BorderRadius.all(
                                                                   Radius
                                                                       .circular(
-                                                                          20)),
+                                                                          15)),
                                                           boxShadow: [
                                                             BoxShadow(
                                                               color: Colors
@@ -320,7 +355,7 @@ class _BuyPageState extends State<BuyPage> {
                                                               spreadRadius: 1,
                                                               blurRadius: 1,
                                                               offset:
-                                                                  Offset(0, 1),
+                                                                  const Offset(0, 1),
                                                             ),
                                                           ],
                                                         ),
@@ -331,7 +366,7 @@ class _BuyPageState extends State<BuyPage> {
                                                           children: [
                                                             Text(
                                                               e.number,
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                 color: Colors
                                                                     .white,
                                                                 fontSize: 30,
@@ -356,7 +391,7 @@ class _BuyPageState extends State<BuyPage> {
                                                             style: FilledButton
                                                                 .styleFrom(
                                                               backgroundColor:
-                                                                  Color
+                                                                  const Color
                                                                       .fromARGB(
                                                                           255,
                                                                           255,
@@ -370,7 +405,7 @@ class _BuyPageState extends State<BuyPage> {
                                                                       0,
                                                                       0),
                                                               textStyle:
-                                                                  TextStyle(
+                                                                  const TextStyle(
                                                                       fontSize:
                                                                           14),
                                                             ),
@@ -378,7 +413,7 @@ class _BuyPageState extends State<BuyPage> {
                                                               showPurchaseDialog(
                                                                   e); // เรียกใช้ dialog เมื่อกดปุ่มซื้อ
                                                             },
-                                                            child: Text(
+                                                            child: const Text(
                                                               'ซื้อ',
                                                               style: TextStyle(
                                                                   fontWeight:
@@ -397,7 +432,7 @@ class _BuyPageState extends State<BuyPage> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                   )
                                 ],
@@ -417,7 +452,7 @@ class _BuyPageState extends State<BuyPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Center(
+          title: const Center(
               child: Text(
             'ยืนยันการซื้อ',
             style: TextStyle(fontWeight: FontWeight.bold),
@@ -429,7 +464,7 @@ class _BuyPageState extends State<BuyPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 OutlinedButton(
-                  child: Text('ยกเลิก',
+                  child: const Text('ยกเลิก',
                       style: TextStyle(
                         color: Color.fromARGB(255, 0, 10, 103),
                       )),
@@ -437,7 +472,7 @@ class _BuyPageState extends State<BuyPage> {
                     Navigator.of(context).pop(); // ปิด popup เมื่อกดยกเลิก
                   },
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(
+                    side: const BorderSide(
                         color: Color.fromARGB(255, 0, 10, 103),
                         width: 2.0), // สีและความหนาของเส้นขอบ
                     shape: RoundedRectangleBorder(
@@ -447,11 +482,11 @@ class _BuyPageState extends State<BuyPage> {
                   ),
                 ),
                 FilledButton(
-                  child: Text('ยืนยัน'),
+                  child: const Text('ยืนยัน'),
                   style: FilledButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                      backgroundColor: const Color.fromARGB(255, 0, 10, 103),
                       foregroundColor: const Color.fromARGB(255, 255, 255, 255),
-                      textStyle: TextStyle(fontSize: 14),
+                      textStyle: const TextStyle(fontSize: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
@@ -494,12 +529,12 @@ class _BuyPageState extends State<BuyPage> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Center(
+              title: const Center(
                   child: Text(
                 'ซื้อลอตโต้สำเร็จ',
                 style: TextStyle(fontWeight: FontWeight.bold),
               )),
-              content: Row(
+              content: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('ชอให้โชคดี'),
@@ -510,12 +545,12 @@ class _BuyPageState extends State<BuyPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FilledButton(
-                      child: Text('ตกลง'),
+                      child: const Text('ตกลง'),
                       style: FilledButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                          backgroundColor: const Color.fromARGB(255, 0, 10, 103),
                           foregroundColor:
                               const Color.fromARGB(255, 255, 255, 255),
-                          textStyle: TextStyle(fontSize: 14),
+                          textStyle: const TextStyle(fontSize: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
@@ -538,12 +573,12 @@ class _BuyPageState extends State<BuyPage> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Center(
+              title: const Center(
                   child: Text(
                 'ยอดเงินไม่เพียงพอ',
                 style: TextStyle(fontWeight: FontWeight.bold),
               )),
-              content: Row(
+              content: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('กรุณาเติมเงิน'),
@@ -554,12 +589,12 @@ class _BuyPageState extends State<BuyPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FilledButton(
-                      child: Text('ตกลง'),
+                      child: const Text('ตกลง'),
                       style: FilledButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 0, 10, 103),
+                          backgroundColor: const Color.fromARGB(255, 0, 10, 103),
                           foregroundColor:
                               const Color.fromARGB(255, 255, 255, 255),
-                          textStyle: TextStyle(fontSize: 14),
+                          textStyle: const TextStyle(fontSize: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.circular(8.0), // มุมโค้งของปุ่ม
