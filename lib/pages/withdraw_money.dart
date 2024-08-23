@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/pages/wallet.dart';
 import 'package:project/config/config.dart';
+import 'package:project/models/respone/user_get_uid_res.dart';
 
 class WithdrawMoney extends StatefulWidget {
   int uid = 0;
@@ -16,6 +17,15 @@ class WithdrawMoney extends StatefulWidget {
 class _WithdrawMoneyState extends State<WithdrawMoney> {
   TextEditingController walletNoCt1 = TextEditingController();
   TextEditingController passwordNoCt1 = TextEditingController();
+  late UserlGetUidRespone user;
+  late Future<void> loadData;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadData = loadDataAsync();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,12 +69,27 @@ class _WithdrawMoneyState extends State<WithdrawMoney> {
                     padding: const EdgeInsets.fromLTRB(0, 90, 0, 50),
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 80),
-                          child: Image.asset(
-                            "assets/images/user.png",
-                            width: 180,
-                          ),
+                        FutureBuilder(
+                          future: loadData,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState !=
+                                ConnectionState.done) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 80),
+                              child: ClipOval(
+                                child: Image.network(
+                                  user.image,
+                                  width: 180,
+                                  height: 180,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                         SingleChildScrollView(
                           child: Padding(
@@ -230,5 +255,14 @@ class _WithdrawMoneyState extends State<WithdrawMoney> {
         SnackBar(content: Text('เกิดข้อผิดพลาด: $e')),
       );
     }
+  }
+
+  Future<void> loadDataAsync() async {
+    var config = await Configuration.getConfig();
+    var url = config['apiEndpoint'];
+
+    var value = await http.get(Uri.parse(("$url/get/${widget.uid}")));
+    user = userlGetUidResponeFromJson(value.body);
+    log(widget.uid.toString());
   }
 }

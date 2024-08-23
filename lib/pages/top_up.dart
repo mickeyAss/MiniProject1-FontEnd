@@ -78,10 +78,14 @@ class _TopUpPageState extends State<TopUpPage> {
                                     ),
                                   ]),
                               Padding(
-                                padding: const EdgeInsets.only(top: 40),
-                                child: Image.network(
-                                  user.image,
-                                  width: 180,
+                                padding: const EdgeInsets.only(top: 20),
+                                child: ClipOval(
+                                  child: Image.network(
+                                    user.image,
+                                    width: 180,
+                                    height: 180,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                               SingleChildScrollView(
