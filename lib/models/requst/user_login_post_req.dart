@@ -3,27 +3,29 @@ import 'dart:convert';
 //
 //     final userLoginPostReq = userLoginPostReqFromJson(jsonString);
 
+UserLoginPostReq userLoginPostReqFromJson(String str) =>
+    UserLoginPostReq.fromJson(json.decode(str));
 
-UserLoginPostReq userLoginPostReqFromJson(String str) => UserLoginPostReq.fromJson(json.decode(str));
-
-String userLoginPostReqToJson(UserLoginPostReq data) => json.encode(data.toJson());
+String userLoginPostReqToJson(UserLoginPostReq data) =>
+    json.encode(data.toJson());
 
 class UserLoginPostReq {
-    String phone;
-    String password;
+  String email;
+  String password;
 
-    UserLoginPostReq({
-        required this.phone,
-        required this.password,
-    });
+  UserLoginPostReq({
+    required this.email,
+    required this.password,
+  });
 
-    factory UserLoginPostReq.fromJson(Map<String, dynamic> json) => UserLoginPostReq(
-        phone: json["phone"],
+  factory UserLoginPostReq.fromJson(Map<String, dynamic> json) =>
+      UserLoginPostReq(
+        email: json["email"],
         password: json["password"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
-        "phone": phone,
+  Map<String, dynamic> toJson() => {
+        "email": email,
         "password": password,
-    };
+      };
 }

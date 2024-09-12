@@ -1,0 +1,27 @@
+{
+	"folders": [
+		{
+			"name": "Project-Facemash",
+			"path": "../../../../../WEB ปี2/Project Av 2-2/Project-Facemash"
+		},
+		{
+			"name": "Backend-Projectfacemash",
+			"path": "../../../../../WEB ปี2/Project Av 2-2/Backend-Projectfacemash"
+		},
+		{
+			"name": "week3_test1",
+			"path": "../../../../week3_test1"
+		},
+		{
+			"name": "fontend-miniproject",
+			"path": "../.."
+		},
+		{
+			"path": "../../../../backend/miniproject-backend"
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "interactive",
+		"liveServer.settings.multiRootWorkspaceName": "Project-Facemash"
+	}
+}

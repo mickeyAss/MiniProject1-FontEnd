@@ -20,7 +20,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool isPressed = false;
-  TextEditingController phoneNoCt1 = TextEditingController();
+  TextEditingController emailNoCt1 = TextEditingController();
   TextEditingController passwordNoCt1 = TextEditingController();
 
   final GlobalKey<State<StatefulWidget>> _sizedBoxKey = GlobalKey();
@@ -80,10 +80,10 @@ class _LoginPageState extends State<LoginPage> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     TextField(
-                                      controller: phoneNoCt1,
+                                      controller: emailNoCt1,
                                       keyboardType: TextInputType.phone,
                                       decoration: InputDecoration(
-                                          labelText: 'หมายเลขโทรศัพท์',
+                                          labelText: 'อีเมล',
                                           prefixIcon: Icon(
                                               Icons.phone_android_outlined),
                                           border: OutlineInputBorder(
@@ -92,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                     SizedBox(height: 20),
                                     TextField(
+                                      obscureText: true,
                                       controller: passwordNoCt1,
                                       keyboardType: TextInputType.text,
                                       decoration: InputDecoration(
@@ -164,11 +165,11 @@ class _LoginPageState extends State<LoginPage> {
 
   void login() async {
     UserLoginPostReq model = UserLoginPostReq(
-      phone: phoneNoCt1.text,
+      email: emailNoCt1.text,
       password: passwordNoCt1.text,
     );
 
-    if (phoneNoCt1.text.isEmpty || passwordNoCt1.text.isEmpty) {
+    if (emailNoCt1.text.isEmpty || passwordNoCt1.text.isEmpty) {
       log('Fields cannot be empty');
       _showSnackBar('กรุณากรอกข้อมูลให้ครบทุกช่อง');
       return;
