@@ -178,6 +178,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       var config = await Configuration.getConfig();
       var url = config['apiEndpoint'];
+
       final response = await http.post(
         Uri.parse("$url/user/login"),
         headers: {"Content-Type": "application/json; charset=utf-8"},
