@@ -255,47 +255,62 @@ class _RegisterPage extends State<RegisterPage> {
               .then(
             (value) {
               log(value.body);
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Center(
-                        child: Text(
-                      'สมัครสมาชิกเรียบร้อย',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    )),
-                    actions: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FilledButton(
-                            child: Text('ตกลง'),
-                            style: FilledButton.styleFrom(
-                                backgroundColor:
-                                    Color.fromARGB(255, 0, 10, 103),
-                                foregroundColor:
-                                    const Color.fromARGB(255, 255, 255, 255),
-                                textStyle: TextStyle(fontSize: 14),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      8.0), // มุมโค้งของปุ่ม
-                                ),
-                                elevation: 5),
-                            onPressed: () {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()),
-                                (Route<dynamic> route) => false,
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                },
-              );
+
+              if (value.body.contains('Email already exists')) {
+                // แสดงข้อความแจ้งเตือนเมื่ออีเมลซ้ำ
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่น',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: Colors.red,
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Center(
+                          child: Text(
+                        'สมัครสมาชิกเรียบร้อย',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )),
+                      actions: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FilledButton(
+                              child: Text('ตกลง'),
+                              style: FilledButton.styleFrom(
+                                  backgroundColor:
+                                      Color.fromARGB(255, 0, 10, 103),
+                                  foregroundColor:
+                                      const Color.fromARGB(255, 255, 255, 255),
+                                  textStyle: TextStyle(fontSize: 14),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        8.0), // มุมโค้งของปุ่ม
+                                  ),
+                                  elevation: 5),
+                              onPressed: () {
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()),
+                                  (Route<dynamic> route) => false,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             },
           ).catchError((err) {
             log(err.toString());
